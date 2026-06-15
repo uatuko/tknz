@@ -1,0 +1,27 @@
+# .gitignore
+#
+
+# build
+.astro/
+.build/
+.dist/
+.svelte-kit/
+vendor/
+
+# node / npm
+node_modules/
+
+# code coverage
+.coverage.out
+
+# local settings
+.local.env
+.idea/
+.vscode/
+launch.json
+
+# temporary files
+*.swp
+*.swo
+*~
+.tmp/
