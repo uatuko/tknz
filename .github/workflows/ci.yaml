@@ -14,9 +14,9 @@ jobs:
     services:
       postgres:
         env:
-          POSTGRES_DB: test-idaas
-          POSTGRES_PASSWORD: idaas
-          POSTGRES_USER: idaas
+          POSTGRES_DB: test-tknz
+          POSTGRES_PASSWORD: tknz
+          POSTGRES_USER: tknz
         image: postgres:17
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
@@ -30,17 +30,17 @@ jobs:
       - name: Setup Postgres
         run: psql < db/schema.sql
         env:
-          PGDATABASE: test-idaas
+          PGDATABASE: test-tknz
           PGHOST: localhost
-          PGPASSWORD: idaas
-          PGUSER: idaas
+          PGPASSWORD: tknz
+          PGUSER: tknz
       - name: Code coverage
         run: make test:coverage
         env:
-          PGDATABASE: test-idaas
+          PGDATABASE: test-tknz
           PGHOST: localhost
-          PGPASSWORD: idaas
-          PGUSER: idaas
+          PGPASSWORD: tknz
+          PGUSER: tknz
 
   lint:
     runs-on: ubuntu-latest
