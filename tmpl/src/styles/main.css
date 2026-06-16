@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@layer base {
+	html {
+		@apply h-full bg-white dark:bg-gray-900;
+	}
+
+	body {
+		@apply h-full;
+	}
+}

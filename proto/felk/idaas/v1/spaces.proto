@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package felk.idaas.v1;
+
+option go_package = "github.com/felk-ai/idaas/pb";
+
+service Spaces {
+	rpc Create(SpacesCreateRequest) returns (SpacesCreateResponse);
+}
+
+message Space {
+	string id   = 1;
+	string slug = 2;
+}
+
+message SpacesCreateRequest {
+	string slug = 1;
+}
+
+message SpacesCreateResponse {
+	Space space = 1;
+}

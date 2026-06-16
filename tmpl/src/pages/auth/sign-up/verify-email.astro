@@ -1,0 +1,57 @@
+---
+import Layout from '@layouts/sign-up.astro';
+
+import IconMail from '@assets/icons/mail-unread-outline.svg';
+---
+
+<Layout>
+	<main class="flex min-h-full flex-col sm:justify-center sm:px-6 sm:py-8 lg:px-8">
+		<div class="sm:mx-auto sm:w-full sm:max-w-lg">
+			<div
+				class="bg-white px-8 py-20 inset-ring-black/5 sm:rounded-xl sm:inset-ring dark:bg-gray-900 dark:inset-ring-white/10 sm:dark:bg-gray-800/50"
+			>
+				<div class="flex flex-col items-center space-y-8 text-center">
+					<div
+						class="mb-12 rounded-xl bg-indigo-100 p-4 inset-ring inset-ring-indigo-100 dark:bg-indigo-400/10 dark:inset-ring-indigo-900"
+					>
+						<IconMail
+							class="size-12 fill-indigo-600 text-indigo-600 drop-shadow-xl drop-shadow-indigo-600 dark:fill-indigo-400 dark:text-indigo-400 dark:drop-shadow-indigo-400"
+						/>
+					</div>
+
+					<h2 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+						Check your inbox
+					</h2>
+
+					<div class="mb-10 max-w-sm space-y-4">
+						<p class="text-md text-gray-500 dark:text-gray-400">
+							We&rsquo;ve sent a verification link to
+						</p>
+
+						<p
+							class="truncate rounded-md bg-gray-50 p-3 font-mono text-sm/6 font-medium text-gray-800 inset-ring inset-ring-gray-100 dark:bg-gray-700/60 dark:text-gray-200 dark:inset-ring-gray-600/50"
+						>
+							{'{{.Email}}'}
+						</p>
+					</div>
+
+					<p class="px-4 text-sm/6 text-gray-500 dark:text-gray-400">
+						Please follow the link in the email to continue. The link is only <span
+							class="font-semibold">valid for the next {'{{.TtlMinutes}}'} minutes</span
+						>.
+					</p>
+				</div>
+
+				<div
+					class="mt-16 border-t border-gray-100 px-2 pt-6 text-center text-xs text-gray-400 dark:border-gray-700/60 dark:text-gray-500"
+				>
+					<p>
+						Can&rsquo;t find the email? Please check your <span class="font-medium">Spam</span> or <span
+							class="font-medium">Junk</span
+						> folder.
+					</p>
+				</div>
+			</div>
+		</div>
+	</main>
+</Layout>

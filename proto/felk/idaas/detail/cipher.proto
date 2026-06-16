@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package felk.idaas.detail;
+
+option go_package = "github.com/felk-ai/idaas/internal/pb";
+
+message Cipher {
+	string kms_key         = 1;
+	string kms_key_version = 2;
+
+	bytes ciphertext = 3;
+}

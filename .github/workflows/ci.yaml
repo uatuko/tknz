@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.job }}
+    services:
+      postgres:
+        env:
+          POSTGRES_DB: test-idaas
+          POSTGRES_PASSWORD: idaas
+          POSTGRES_USER: idaas
+        image: postgres:17
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Setup Postgres
+        run: psql < db/schema.sql
+        env:
+          PGDATABASE: test-idaas
+          PGHOST: localhost
+          PGPASSWORD: idaas
+          PGUSER: idaas
+      - name: Code coverage
+        run: make test:coverage
+        env:
+          PGDATABASE: test-idaas
+          PGHOST: localhost
+          PGPASSWORD: idaas
+          PGUSER: idaas
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+      - run: npm ci
+      - run: make lint:ci

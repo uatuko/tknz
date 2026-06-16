@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package klara.mx.v1;
+
+option go_package = "github.com/felk-ai/idaas/internal/klarapb;klarapb";
+
+service Mail {
+	rpc Send(MailSendRequest) returns (MailSendResponse);
+}
+
+enum MailStatus {
+	mail_pending    = 0;
+	mail_processing = 1;
+	mail_done       = 2;
+	mail_error      = -1;
+}
+
+enum MailType {
+	mail_type_unknown  = 0;
+	mail_type_inbound  = 1;
+	mail_type_outbound = 2;
+}
+
+// Ref: https://www.rfc-editor.org/rfc/rfc2822#section-3.4
+message Address {
+	// Mailbox identifier
+	// Ref: https://www.rfc-editor.org/rfc/rfc2822#section-3.4.1
+	string email = 1;
+
+	// Display name
+	string name = 2;
+}
+
+message Message {
+	// MIME type
+	string type = 1;
+
+	string data = 2;
+}
+
+message MailSendRequest {
+	optional Address from = 1;
+
+	repeated Address to  = 2;
+	repeated Address cc  = 3;
+	repeated Address bcc = 4;
+
+	// See https://www.rfc-editor.org/rfc/rfc2822#section-2.1.1
+	string subject = 5;
+
+	repeated Message content = 6;
+}
+
+message MailSendResponse {}

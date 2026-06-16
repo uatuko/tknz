@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package felk.idaas.detail;
+
+option go_package = "github.com/felk-ai/idaas/internal/pb";
+
+message Token {
+	// Token
+	bytes token = 1;
+
+	// Token signature
+	bytes signature = 2;
+
+	// Key id used for the token signature
+	string kid = 3;
+}

@@ -1,0 +1,68 @@
+---
+import '@styles/main.css';
+---
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body class="grid-rows grid h-screen grow bg-white px-6 py-12 sm:px-8 lg:px-12 dark:bg-gray-900">
+		<main class="place-self-center sm:mt-12">
+			<svg class="size-15 fill-amber-500 dark:fill-amber-300" viewBox="0 0 512 512">
+				<path
+					d="M449.07 399.08L278.64 82.58c-12.08-22.44-44.26-22.44-56.35 0L51.87 399.08A32 32 0 0080 446.25h340.89a32 32 0 0028.18-47.17zm-198.6-1.83a20 20 0 1120-20 20 20 0 01-20 20zm21.72-201.15l-5.74 122a16 16 0 01-32 0l-5.74-121.95a21.73 21.73 0 0121.5-22.69h.21a21.74 21.74 0 0121.73 22.7z"
+				></path>
+			</svg>
+
+			<div class="mx-auto mt-8 max-w-2xl">
+				<h1
+					class="mt-4 text-4xl font-semibold tracking-tight text-balance text-gray-900 dark:text-white"
+				>
+					Access blocked
+				</h1>
+				<p
+					class="mt-3 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-gray-400"
+				>
+					You cannot continue with this sign-in request.
+				</p>
+				<p class="text-md mt-3 text-pretty text-gray-500 sm:text-lg/8 dark:text-gray-400">
+					This could be due to a temporary error. You may be able to continue by trying again.
+				</p>
+				<div class="mt-12 flex w-full items-center text-gray-500 dark:text-gray-400">
+					<div aria-hidden="true" class="w-full border-t border-gray-300 dark:border-white/15">
+					</div>
+					<div class="relative flex justify-center">
+						<span
+							class="flex flex-nowrap items-center gap-2 bg-white px-2 text-sm text-nowrap dark:bg-gray-900"
+							>Error details</span
+						>
+					</div>
+					<div aria-hidden="true" class="w-full border-t border-gray-300 dark:border-white/15">
+					</div>
+				</div>
+				<p class="mt-3 overflow-hidden text-xs text-pretty text-gray-500 dark:text-gray-400">
+					{'{{.StatusCode}}'} - {'{{.Error}}'}
+				</p>
+				<p class="mt-3 overflow-hidden text-xs text-pretty text-gray-500 dark:text-gray-400">
+					{'{{.ErrorDescription}}'}
+				</p>
+			</div>
+		</main>
+		<footer class="place-self-end justify-self-center bg-white dark:bg-gray-900">
+			<div class="mx-auto max-w-7xl overflow-hidden px-6 lg:px-8">
+				<p class="mt-10 text-center text-sm/6 text-gray-600 dark:text-gray-400">
+					Powered by
+					<a
+						target="_blank"
+						href="https://felk.ai"
+						class="font-semibold text-indigo-600 dark:text-indigo-500"
+					>
+						Felk
+					</a>
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>

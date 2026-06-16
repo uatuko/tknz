@@ -1,0 +1,28 @@
+---
+import '@styles/main.css';
+---
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body class="grid grid-rows-[1fr_auto] flex-col place-items-center bg-white dark:bg-gray-900">
+		<slot />
+		<footer class="py-6 sm:py-10">
+			<div
+				class="mx-auto flex max-w-7xl flex-col items-center justify-center gap-8 px-6 sm:flex-row lg:px-8"
+			>
+				<p class="text-xs text-gray-400 dark:text-gray-500">
+					Powered by
+					<a
+						href="https://felk.ai"
+						target="_blank"
+						class="font-semibold text-indigo-600 dark:text-indigo-500">Felk</a
+					>
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>

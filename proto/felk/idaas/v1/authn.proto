@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package felk.idaas.v1;
+
+option go_package = "github.com/felk-ai/idaas/pb";
+
+service Authn {
+	rpc Check(AuthnCheckRequest) returns (AuthnCheckResponse);
+}
+
+enum IdnStatus {
+	idn_pending   = 0;
+	idn_active    = 1;
+	idn_suspended = -1;
+	idn_deleted   = -2;
+}
+
+message Idn {
+	string    id       = 1;
+	IdnStatus status   = 2;
+	string    space_id = 3;
+	string    login    = 4;
+
+	optional string email   = 5;
+	optional string name    = 6;
+	optional string picture = 7;
+}
+
+message AuthnCheckRequest {
+	// Access token to validate
+	string token = 1;
+
+	// App ID, required if validating federated identity tokens
+	optional string app_id = 2;
+}
+
+message AuthnCheckResponse {
+	// Indicates whether the check was successful or not
+	bool ok = 1;
+
+	// Identity information if the check was successful
+	optional Idn idn = 2;
+}

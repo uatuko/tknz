@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Verify your email for Felk</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: ui-sans-serif, system-ui, sans-serif;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-break: break-word;
+			}
+			table {
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-break: break-word;
+			}
+			p,
+			h1 {
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+				word-break: break-word;
+			}
+			@media screen and (max-width: 672px) {
+				table.responsive {
+					width: 100% !important;
+				}
+				table.responsive td {
+					width: 100% !important;
+					word-wrap: break-word !important;
+					overflow-wrap: break-word !important;
+					word-break: break-word !important;
+				}
+				p {
+					word-wrap: break-word !important;
+					overflow-wrap: break-word !important;
+					word-break: break-word !important;
+				}
+			}
+			@media screen and (min-width: 768px) {
+				.md-border {
+					border-width: 1px !important;
+					border-style: solid !important;
+				}
+
+				.md-pt-5 {
+					padding-top: 20px !important;
+				}
+			}
+		</style>
+	</head>
+	<body
+		style="
+			margin: 0;
+			padding: 0;
+			background-color: #ffffff;
+			word-wrap: break-word;
+			overflow-wrap: break-word;
+			word-break: break-word;
+		"
+	>
+		<div style="margin: 0px auto; padding: 32px 0; max-width: 672px">
+			<table
+				width="100%"
+				cellpadding="0"
+				cellspacing="0"
+				border="0"
+				style="background-color: #ffffff"
+			>
+				<tr>
+					<td
+						align="center"
+						class="md-border"
+						style="border-color: #e5e5e5; border-radius: 24px; padding: 8px"
+					>
+						<div class="margin: 0px auto; max-width: 640px">
+							<table
+								cellpadding="0"
+								cellspacing="0"
+								border="0"
+								class="responsive"
+								style="
+									width: 100%;
+									padding: 20px 40px 0 40px;
+									background-color: #ffffff;
+									word-wrap: break-word;
+									overflow-wrap: break-word;
+								"
+							>
+								<tr>
+									<td class="md-pt-5" style="padding-bottom: 40px">
+										<table width="100%" cellpadding="0" cellspacing="0" border="0">
+											<tr>
+												<td style="padding-bottom: 20px">
+													<div
+														style="
+															width: 72px;
+															height: 72px;
+															background-color: #f3f4f6;
+															border-radius: 16px;
+														"
+													>
+														<img
+															src="https://felk.ai/img/favicon-180x180.png"
+															alt="Felk Logo"
+															width="72"
+															height="72"
+															style="display: block; border: 0"
+														/>
+													</div>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<h1
+														style="
+															margin: 0;
+															padding: 0;
+															font-size: 24px;
+															font-weight: 600;
+															line-height: 30px;
+															color: #000000;
+														"
+													>
+														Your Felk account
+													</h1>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td style="padding-bottom: 30px">
+										<table width="100%" cellpadding="0" cellspacing="0" border="0">
+											<tr>
+												<td style="padding-bottom: 30px">
+													<p
+														style="
+															margin: 0;
+															padding: 0;
+															font-size: 16px;
+															line-height: 24px;
+															color: #1a1a1a;
+														"
+													>
+														Tap on the button below to continue creating your new account, we just
+														need to verify your email address.
+													</p>
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<table cellpadding="0" cellspacing="0" border="0">
+														<tr>
+															<td
+																align="center"
+																style="border-radius: 8px; background-color: #4f46e5"
+															>
+																<a
+																	href="{{.VerifyLink}}"
+																	style="
+																		display: inline-block;
+																		padding: 12px 32px;
+																		font-size: 16px;
+																		font-weight: 400;
+																		color: #ffffff;
+																		text-decoration: none;
+																		border-radius: 8px;
+																	"
+																	>Verify your email</a
+																>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<table width="100%" cellpadding="0" cellspacing="0" border="0">
+											<tr>
+												<td style="padding-bottom: 20px">
+													<hr style="border: 0; border-top: 1px solid #e5e5e5; margin: 0" />
+												</td>
+											</tr>
+
+											<tr>
+												<td>
+													<p
+														style="
+															margin: 0;
+															padding-bottom: 10px;
+															font-size: 12px;
+															line-height: 18px;
+															color: #666666;
+														"
+													>
+														This link expires in {{.TtlMinutes}} minutes.
+													</p>
+												</td>
+											</tr>
+
+											<tr>
+												<td style="padding-bottom: 30px">
+													<p
+														style="
+															margin: 0;
+															padding: 0;
+															font-size: 12px;
+															line-height: 18px;
+															color: #666666;
+														"
+													>
+														If this wasn&rsquo;t you, you can safely ignore this email. Someone else
+														might have typed your email address by mistake.
+													</p>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
