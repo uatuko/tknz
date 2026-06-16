@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/felk-ai/idaas/internal/db"
 	"github.com/rs/zerolog"
+	"go.tknz.dev/internal/db"
 )
 
 type passkeySignInData struct {

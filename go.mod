@@ -1,4 +1,4 @@
-module github.com/felk-ai/idaas
+module go.tknz.dev
 
 go 1.25.0
 

@@ -3,7 +3,7 @@ package jwk
 import (
 	"context"
 
-	"github.com/felk-ai/idaas/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jwa"
 )
 
 const (

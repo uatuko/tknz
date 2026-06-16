@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/felk-ai/idaas/internal/jose/jwa"
-	"github.com/felk-ai/idaas/internal/jose/jwk"
+	"go.tknz.dev/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jwk"
 )
 
 func rsaPublicKey(k *jwk.Jwk) (*rsa.PublicKey, error) {

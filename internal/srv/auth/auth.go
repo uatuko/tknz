@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/felk-ai/idaas/internal/db"
 	"github.com/rs/zerolog/log"
+	"go.tknz.dev/internal/db"
 )
 
 const (

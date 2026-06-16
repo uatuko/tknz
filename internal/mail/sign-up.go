@@ -8,7 +8,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/felk-ai/idaas/internal/klarapb"
+	"go.tknz.dev/internal/klarapb"
 )
 
 func SendSignUpVerify(ctx context.Context, toEmail string, link string, ttl time.Duration) error {

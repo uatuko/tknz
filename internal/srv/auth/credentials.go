@@ -20,10 +20,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/srv/common"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/rs/zerolog"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/srv/common"
 )
 
 const (

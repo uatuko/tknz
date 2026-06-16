@@ -17,10 +17,10 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/kms"
-	"github.com/felk-ai/idaas/internal/mail"
-	"github.com/felk-ai/idaas/internal/srv"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/kms"
+	"go.tknz.dev/internal/mail"
+	"go.tknz.dev/internal/srv"
 )
 
 var (

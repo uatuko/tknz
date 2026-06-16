@@ -8,12 +8,12 @@ import (
 	"slices"
 	"time"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/jose/jwa"
-	"github.com/felk-ai/idaas/internal/jose/jws"
-	"github.com/felk-ai/idaas/internal/kms"
-	"github.com/felk-ai/idaas/internal/pb"
-	"github.com/felk-ai/idaas/internal/srv/common"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jws"
+	"go.tknz.dev/internal/kms"
+	"go.tknz.dev/internal/pb"
+	"go.tknz.dev/internal/srv/common"
 	"google.golang.org/protobuf/proto"
 )
 

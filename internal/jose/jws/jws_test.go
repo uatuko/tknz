@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/felk-ai/idaas/internal/jose/jwa"
-	"github.com/felk-ai/idaas/internal/jose/jwk"
 	"github.com/stretchr/testify/require"
+	"go.tknz.dev/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jwk"
 )
 
 func TestDeserialize(t *testing.T) {
