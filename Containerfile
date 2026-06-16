@@ -15,7 +15,7 @@ RUN \
 	GOARCH=${TARGETARCH} \
 	GOOS=${TARGETOS} \
 	go build \
-		-o /opt/package/bin/idaas \
+		-o /opt/package/bin/tknz \
 		main.go
 
 
@@ -33,5 +33,5 @@ RUN \
 COPY --from=builder /opt/package /opt/package
 
 WORKDIR /opt/package
-ENTRYPOINT [ "bin/idaas" ]
+ENTRYPOINT [ "bin/tknz" ]
 EXPOSE 8080
