@@ -27,7 +27,7 @@ var (
 	addr       = flag.String("addr", ":8080", "tcp address to listen on")
 	debug      = flag.Bool("debug", false, "enable debug logs")
 	mailAddr   = flag.String("mail-addr", "", "mail grpc address")
-	mailDomain = flag.String("mail-domain", "idaas.local", "domain to use for outbound mail")
+	mailDomain = flag.String("mail-domain", "tknz.local", "domain to use for outbound mail")
 )
 
 func _init() error {
