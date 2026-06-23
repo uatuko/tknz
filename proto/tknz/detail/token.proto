@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package felk.idaas.detail;
+package tknz.detail;
 
-option go_package = "github.com/felk-ai/idaas/internal/pb";
+option go_package = "go.tknz.dev/internal/pb";
 
 message Token {
 	// Token

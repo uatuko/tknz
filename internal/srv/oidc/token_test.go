@@ -15,7 +15,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/felk-ai/idaas/internal/db"
+	"go.tknz.dev/internal/db"
 )
 
 func TestJwsValidate(t *testing.T) {

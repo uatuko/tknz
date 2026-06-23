@@ -15,9 +15,9 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/jose/jws"
-	"github.com/felk-ai/idaas/internal/srv/auth"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/jose/jws"
+	"go.tknz.dev/internal/srv/auth"
 )
 
 // Ref: https://www.rfc-editor.org/rfc/rfc7519.html#section-4.1 (registered claims)

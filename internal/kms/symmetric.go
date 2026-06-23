@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"github.com/felk-ai/idaas/internal/pb"
+	"go.tknz.dev/internal/pb"
 )
 
 func Decrypt(ctx context.Context, data []byte) ([]byte, error) {

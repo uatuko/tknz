@@ -12,9 +12,9 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/kms"
-	"github.com/felk-ai/idaas/internal/srv/common"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/kms"
+	"go.tknz.dev/internal/srv/common"
 )
 
 type oidcProvider struct {

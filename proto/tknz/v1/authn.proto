@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package felk.idaas.v1;
+package tknz.v1;
 
-option go_package = "github.com/felk-ai/idaas/pb";
+option go_package = "go.tknz.dev/pb";
 
 service Authn {
 	rpc Check(AuthnCheckRequest) returns (AuthnCheckResponse);

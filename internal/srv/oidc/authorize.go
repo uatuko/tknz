@@ -8,8 +8,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/srv/auth"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/srv/auth"
 )
 
 func AuthorizationHandler(w http.ResponseWriter, r *http.Request) {

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/felk-ai/idaas/internal/db"
+	"go.tknz.dev/internal/db"
 	"golang.org/x/crypto/argon2"
 )
 

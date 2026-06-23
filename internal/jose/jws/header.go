@@ -1,7 +1,7 @@
 package jws
 
 import (
-	"github.com/felk-ai/idaas/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jwa"
 )
 
 const (

@@ -13,10 +13,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/felk-ai/idaas/internal/srv/auth"
-	"github.com/felk-ai/idaas/internal/srv/common"
-	"github.com/felk-ai/idaas/internal/srv/oidc"
-	"github.com/felk-ai/idaas/pb"
+	"go.tknz.dev/internal/srv/auth"
+	"go.tknz.dev/internal/srv/common"
+	"go.tknz.dev/internal/srv/oidc"
+	"go.tknz.dev/pb"
 )
 
 const (

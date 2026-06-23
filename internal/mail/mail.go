@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/credentials/oauth"
 
-	"github.com/felk-ai/idaas/internal/klarapb"
+	"go.tknz.dev/internal/klarapb"
 )
 
 var mailClient klarapb.MailClient

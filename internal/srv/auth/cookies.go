@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/felk-ai/idaas/internal/srv/common"
+	"go.tknz.dev/internal/srv/common"
 )
 
 func deleteNonceCookie(w http.ResponseWriter) {

@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/felk-ai/idaas/internal/jose/jwk"
-	"github.com/felk-ai/idaas/internal/jose/jws"
+	"go.tknz.dev/internal/jose/jwk"
+	"go.tknz.dev/internal/jose/jws"
 )
 
 type JwkFunc func(ctx context.Context, kid string, iss string) (*jwk.Jwk, error)

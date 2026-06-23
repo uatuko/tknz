@@ -1,4 +1,4 @@
-binary = .build/idaas
+binary = .build/tknz
 
 pbdir     = pb
 pbdir-int = internal/pb

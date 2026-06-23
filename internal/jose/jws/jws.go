@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/felk-ai/idaas/internal/jose/jwa"
-	"github.com/felk-ai/idaas/internal/jose/jwk"
+	"go.tknz.dev/internal/jose/jwa"
+	"go.tknz.dev/internal/jose/jwk"
 )
 
 type JwkFunc func(ctx context.Context, kid string) (*jwk.Jwk, error)

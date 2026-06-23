@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/pb"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/pb"
 )
 
 type spaces struct {

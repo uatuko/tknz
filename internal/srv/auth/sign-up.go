@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/mail"
-	"github.com/felk-ai/idaas/internal/srv/common"
-	"github.com/felk-ai/idaas/internal/valid"
 	"github.com/rs/zerolog"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/mail"
+	"go.tknz.dev/internal/srv/common"
+	"go.tknz.dev/internal/valid"
 )
 
 func signUpHandler(w http.ResponseWriter, r *http.Request) {

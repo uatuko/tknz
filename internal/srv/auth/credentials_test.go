@@ -10,9 +10,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/felk-ai/idaas/internal/db"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.tknz.dev/internal/db"
 )
 
 func TestCredentialPublicKeyUnmarshalCBOR(t *testing.T) {

@@ -13,14 +13,14 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/felk-ai/idaas/internal/db"
-	"github.com/felk-ai/idaas/internal/jose/jwk"
-	"github.com/felk-ai/idaas/internal/jose/jwt"
-	pbi "github.com/felk-ai/idaas/internal/pb"
-	"github.com/felk-ai/idaas/internal/srv/auth"
-	"github.com/felk-ai/idaas/internal/srv/common"
-	"github.com/felk-ai/idaas/pb"
 	"github.com/rs/zerolog"
+	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/jose/jwk"
+	"go.tknz.dev/internal/jose/jwt"
+	pbi "go.tknz.dev/internal/pb"
+	"go.tknz.dev/internal/srv/auth"
+	"go.tknz.dev/internal/srv/common"
+	"go.tknz.dev/pb"
 )
 
 type authn struct {
