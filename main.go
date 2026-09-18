@@ -14,8 +14,6 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/kms"
@@ -74,10 +72,12 @@ func main() {
 		log.Fatal().Err(err).Msg("failed to listen")
 	}
 
-	handler := srv.New()
 	srv := http.Server{
-		Handler: h2c.NewHandler(handler, &http2.Server{}),
+		Handler: srv.New(),
 	}
+	srv.Protocols = &http.Protocols{}
+	srv.Protocols.SetHTTP1(true)
+	srv.Protocols.SetUnencryptedHTTP2(true)
 
 	errCh := make(chan error, 1)
 	go func() {
