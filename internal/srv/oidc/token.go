@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/big"
 	"net/http"
 	"os"
 	"strings"
@@ -17,6 +16,7 @@ import (
 
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/jose/jws"
+	"go.tknz.dev/internal/kms"
 	"go.tknz.dev/internal/srv/auth"
 )
 
@@ -158,12 +158,13 @@ func jwsValidate(payload string, b64sig string, key *ecdsa.PublicKey) error {
 		return err
 	}
 
-	digest := sha256.Sum256([]byte(payload))
-	var r, s big.Int
-	r.SetBytes(sig[:32])
-	s.SetBytes(sig[32:])
+	ecSig, err := kms.ParseEcSig(key.Curve, sig)
+	if err != nil {
+		return err
+	}
 
-	if !ecdsa.Verify(key, digest[:], &r, &s) {
+	digest := sha256.Sum256([]byte(payload))
+	if !ecdsa.Verify(key, digest[:], ecSig.R, ecSig.S) {
 		return fmt.Errorf("jws validation failed")
 	}
 
