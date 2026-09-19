@@ -24,6 +24,7 @@ import (
 var (
 	addr       = flag.String("addr", ":8080", "tcp address to listen on")
 	debug      = flag.Bool("debug", false, "enable debug logs")
+	kmsKey     = flag.String("kms-key", "", "pem encoded elliptic-curve private key to use with local kms (e.g. key.pem), defaults to using google cloud kms when not set")
 	mailAddr   = flag.String("mail-addr", "", "mail grpc address")
 	mailDomain = flag.String("mail-domain", "tknz.local", "domain to use for outbound mail")
 )
@@ -49,7 +50,7 @@ func _init() error {
 		return fmt.Errorf("failed to initialise db, err: %w", err)
 	}
 
-	if err = kms.Init(ctx); err != nil {
+	if err = kms.Init(ctx, *kmsKey); err != nil {
 		return fmt.Errorf("failed to initialise kms, err: %w", err)
 	}
 

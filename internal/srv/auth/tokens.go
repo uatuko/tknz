@@ -43,7 +43,7 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 	}
 
 	tokenBytes := token.Token()
-	ecSig, err := key.Sign(ctx, tokenBytes)
+	sig, err := key.Sign(ctx, tokenBytes)
 	if err != nil {
 		return "", err
 	}
@@ -51,7 +51,7 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 	pbToken := pb.Token{
 		Kid:       key.Kid(),
 		Token:     tokenBytes,
-		Signature: slices.Concat(ecSig.R.Bytes(), ecSig.S.Bytes()),
+		Signature: sig,
 	}
 
 	b, err := proto.Marshal(&pbToken)
@@ -114,12 +114,12 @@ func jwsSign(ctx context.Context, header *jws.Header, payload string) (string, e
 	header.Kid = key.Kid()
 	input := fmt.Sprintf("%s.%s", jwsEncode(header), payload)
 
-	ecSig, err := key.Sign(ctx, []byte(input))
+	sig, err := key.Sign(ctx, []byte(input))
 	if err != nil {
 		return "", err
 	}
 
-	jwsSig := base64.RawURLEncoding.EncodeToString(slices.Concat(ecSig.R.Bytes(), ecSig.S.Bytes()))
+	jwsSig := base64.RawURLEncoding.EncodeToString(sig)
 
 	return fmt.Sprintf("%s.%s", input, jwsSig), nil
 }
