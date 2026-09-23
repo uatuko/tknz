@@ -2,19 +2,10 @@ package kms
 
 import (
 	"context"
-	"crypto/sha256"
-	"encoding/asn1"
+	"crypto/elliptic"
 	"fmt"
 	"math/big"
-	"os"
-
-	"cloud.google.com/go/kms/apiv1/kmspb"
 )
-
-type EcSig struct {
-	R *big.Int
-	S *big.Int
-}
 
 type EcKey struct {
 	kid           string
@@ -26,29 +17,13 @@ func (k *EcKey) Kid() string {
 	return k.kid
 }
 
-func (k *EcKey) Sign(ctx context.Context, data []byte) (*EcSig, error) {
-	keyName := fmt.Sprintf("%s/cryptoKeys/%s/cryptoKeyVersions/%s",
-		os.Getenv("GCLOUD_KMS_KEYRING"), k.kmsKey, k.kmsKeyVersion)
+func (k *EcKey) Sign(ctx context.Context, data []byte) ([]byte, error) {
+	return client.Sign(ctx, k.kmsKey, k.kmsKeyVersion, data)
+}
 
-	digest := sha256.Sum256(data)
-	result, err := client.AsymmetricSign(ctx, &kmspb.AsymmetricSignRequest{
-		Name: keyName,
-		Digest: &kmspb.Digest{
-			Digest: &kmspb.Digest_Sha256{
-				Sha256: digest[:],
-			},
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	var sig EcSig
-	if _, err = asn1.Unmarshal(result.Signature, &sig); err != nil {
-		return nil, err
-	}
-
-	return &sig, nil
+type EcSig struct {
+	R *big.Int
+	S *big.Int
 }
 
 func NewEcKey(kid string, kmsKey string, kmsKeyVersion string) *EcKey {
@@ -57,4 +32,26 @@ func NewEcKey(kid string, kmsKey string, kmsKeyVersion string) *EcKey {
 		kmsKey:        kmsKey,
 		kmsKeyVersion: kmsKeyVersion,
 	}
+}
+
+// ParseEcSig parses a signature made up of the fixed-width r and s coordinates
+// concatenated together, as produced by [EcKey.Sign] and used by JOSE (ES256
+// and friends).
+func ParseEcSig(curve elliptic.Curve, sig []byte) (*EcSig, error) {
+	size := ecCoordinateSize(curve)
+	if len(sig) != 2*size {
+		// FIXME: errors
+		return nil, fmt.Errorf("invalid ec signature size (want: %v, have: %v)", 2*size, len(sig))
+	}
+
+	return &EcSig{
+		R: new(big.Int).SetBytes(sig[:size]),
+		S: new(big.Int).SetBytes(sig[size:]),
+	}, nil
+}
+
+// ecCoordinateSize returns the byte size of an ec signature coordinate (r or s)
+// on curve.
+func ecCoordinateSize(curve elliptic.Curve) int {
+	return (curve.Params().BitSize + 7) / 8
 }

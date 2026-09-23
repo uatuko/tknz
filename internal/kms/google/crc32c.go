@@ -1,4 +1,4 @@
-package kms
+package google
 
 import "hash/crc32"
 

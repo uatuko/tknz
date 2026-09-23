@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"math/big"
 	"strings"
 
 	"google.golang.org/grpc/metadata"
@@ -17,6 +16,7 @@ import (
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/jose/jwk"
 	"go.tknz.dev/internal/jose/jwt"
+	"go.tknz.dev/internal/kms"
 	pbi "go.tknz.dev/internal/pb"
 	"go.tknz.dev/internal/srv/auth"
 	"go.tknz.dev/internal/srv/common"
@@ -114,12 +114,6 @@ func checkAccessToken(ctx context.Context, token string) (*db.Idn, error) {
 		return nil, errInvalidAccessToken
 	}
 
-	digest := sha256.Sum256(pbToken.GetToken())
-	sig := pbToken.GetSignature()
-	var r, s big.Int
-	r.SetBytes(sig[:32])
-	s.SetBytes(sig[32:])
-
 	params := jwk.Params()
 	key, err := params.EcPublicKey()
 	if err != nil {
@@ -127,7 +121,14 @@ func checkAccessToken(ctx context.Context, token string) (*db.Idn, error) {
 		return nil, ErrInternal
 	}
 
-	if !ecdsa.Verify(key, digest[:], &r, &s) {
+	sig, err := kms.ParseEcSig(key.Curve, pbToken.GetSignature())
+	if err != nil {
+		fmt.Printf("[error] invalid signature, err: %v\n", err)
+		return nil, errInvalidAccessToken
+	}
+
+	digest := sha256.Sum256(pbToken.GetToken())
+	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
 		fmt.Println("[error] invalid signature")
 		return nil, errInvalidAccessToken
 	}

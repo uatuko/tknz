@@ -22,6 +22,12 @@ $(binary): $(sources)
 
 all: $(binary)
 
+.tmp:
+	mkdir .tmp
+
+.tmp/key.pem: .tmp
+	openssl ecparam -name prime256v1 -genkey -noout -out .tmp/key.pem
+
 clean:
 	go clean
 	if [ -f $(binary) ] ; then rm $(binary); fi
@@ -73,10 +79,11 @@ protoc: protoc-int protoc-klara
 		--go-grpc_out=$(pbdir) --go-grpc_opt=module=$(githubrepo)/$(pbdir) \
 		$(protos)
 
-run:
+run: .tmp/key.pem
 	npm run build
 	go run -race . -debug \
 		-addr localhost:8080 \
+		-kms-key .tmp/key.pem \
 		-mail-addr localhost:50151 \
 		$(filter-out $@,$(MAKECMDGOALS))
 

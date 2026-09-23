@@ -2,18 +2,33 @@ package kms
 
 import (
 	"context"
-	"os"
 
-	kms "cloud.google.com/go/kms/apiv1"
-	"google.golang.org/api/option"
+	"go.tknz.dev/internal/kms/google"
+	"go.tknz.dev/internal/kms/local"
 )
 
-var client *kms.KeyManagementClient
+var (
+	client DecryptSigner
+)
 
-func Init(ctx context.Context) error {
+type DecryptSigner interface {
+	Decrypt(ctx context.Context, data []byte) ([]byte, error)
+
+	Sign(ctx context.Context, keyName string, keyVersion string, data []byte) ([]byte, error)
+}
+
+// Init initialises the key management service.
+//
+// Google Cloud KMS is used when keyFile is empty, otherwise the pem encoded key
+// in keyFile is used to sign and decrypt locally.
+func Init(ctx context.Context, keyFile string) error {
 	var err error
-	quotaProject := os.Getenv("GCLOUD_KMS_QUOTA_PROJECT")
-	client, err = kms.NewKeyManagementClient(ctx, option.WithQuotaProject(quotaProject))
+	if keyFile != "" {
+		client, err = local.NewClient(ctx, keyFile)
+	} else {
+		client, err = google.NewClient(ctx)
+	}
+
 	if err != nil {
 		return err
 	}
