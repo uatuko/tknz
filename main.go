@@ -24,7 +24,7 @@ import (
 var (
 	addr       = flag.String("addr", ":8080", "tcp address to listen on")
 	debug      = flag.Bool("debug", false, "enable debug logs")
-	kmsKey     = flag.String("kms-key", "", "pem encoded elliptic-curve private key to use with local kms (e.g. key.pem), defaults to using google cloud kms when not set")
+	kmsKey     = flag.String("kms-key", "", "pem encoded elliptic-curve private key to use with local kms (e.g. .tmp/key.pem), defaults to using google cloud kms when not set")
 	mailAddr   = flag.String("mail-addr", "", "mail grpc address")
 	mailDomain = flag.String("mail-domain", "tknz.local", "domain to use for outbound mail")
 )
