@@ -5,6 +5,7 @@ Authentication for humans and bots.
 ## Running locally
 
 ### KMS
+
 ```sh
 # create an ec private key to use with local kms
 mkdir .tmp
