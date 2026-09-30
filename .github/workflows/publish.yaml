@@ -56,11 +56,12 @@ jobs:
             linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Extract repo name
+        id: repo
+        run: echo "name=$(basename ${{ github.repository }})" >> $GITHUB_OUTPUT
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: ${{ env.package }}
+          package-name: ${{ steps.repo.outputs.name }}
           package-type: container
           min-versions-to-keep: 2
           delete-only-untagged-versions: true
-        env:
-          package: $(basename ${{ github.repository }})
