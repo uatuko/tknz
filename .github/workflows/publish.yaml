@@ -58,7 +58,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
       - uses: actions/delete-package-versions@v5
         with:
-          package-name: ${{ github.repository }}
+          package-name: ${{ env.package }}
           package-type: container
           min-versions-to-keep: 2
           delete-only-untagged-versions: true
+        env:
+          package: $(basename ${{ github.repository }})
