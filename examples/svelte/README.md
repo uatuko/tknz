@@ -2,6 +2,18 @@
 
 ## Setup
 
+```sh
+# generate ec p-256 private key
+if [ ! -d .tmp ]; then mkdir .tmp; fi
+openssl ecparam -name prime256v1 -genkey -noout -out .tmp/ecdsa_p-256.pem
+
+# copy pkcs#8 formatted key (to update .env.local)
+openssl pkey -in .tmp/ecdsa_p-256.pem | pbcopy
+
+# generate jwks (to insert into db)
+go run ../../cmd/mkjwks -keys .tmp/ecdsa_p-256.pem
+```
+
 ```sql
 -- space (require sys space)
 insert into spaces (id, slug, attrs) values ('local', 'local', '{}');
@@ -24,6 +36,10 @@ update apps
 set
   attrs = jsonb_set(attrs, '{_rev}',
   to_jsonb(extract(epoch from clock_timestamp())::integer))
+where id = 'local';
+
+update apps
+set attrs = attrs || '{"keys":[]}'::jsonb -- jwks generated from ec p-256 private key
 where id = 'local';
 
 -- providers
