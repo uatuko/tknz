@@ -1,0 +1,123 @@
+{
+  "nested": {
+    "tknz": {
+      "nested": {
+        "v1": {
+          "options": {
+            "go_package": "go.tknz.dev/pb"
+          },
+          "nested": {
+            "Authn": {
+              "methods": {
+                "Check": {
+                  "requestType": "AuthnCheckRequest",
+                  "responseType": "AuthnCheckResponse"
+                }
+              }
+            },
+            "IdnStatus": {
+              "values": {
+                "idn_pending": 0,
+                "idn_active": 1,
+                "idn_suspended": -1,
+                "idn_deleted": -2
+              }
+            },
+            "Idn": {
+              "oneofs": {
+                "_email": {
+                  "oneof": ["email"]
+                },
+                "_name": {
+                  "oneof": ["name"]
+                },
+                "_picture": {
+                  "oneof": ["picture"]
+                }
+              },
+              "fields": {
+                "id": {
+                  "type": "string",
+                  "id": 1
+                },
+                "status": {
+                  "type": "IdnStatus",
+                  "id": 2
+                },
+                "spaceId": {
+                  "type": "string",
+                  "id": 3
+                },
+                "login": {
+                  "type": "string",
+                  "id": 4
+                },
+                "email": {
+                  "type": "string",
+                  "id": 5,
+                  "options": {
+                    "proto3_optional": true
+                  }
+                },
+                "name": {
+                  "type": "string",
+                  "id": 6,
+                  "options": {
+                    "proto3_optional": true
+                  }
+                },
+                "picture": {
+                  "type": "string",
+                  "id": 7,
+                  "options": {
+                    "proto3_optional": true
+                  }
+                }
+              }
+            },
+            "AuthnCheckRequest": {
+              "oneofs": {
+                "_appId": {
+                  "oneof": ["appId"]
+                }
+              },
+              "fields": {
+                "token": {
+                  "type": "string",
+                  "id": 1
+                },
+                "appId": {
+                  "type": "string",
+                  "id": 2,
+                  "options": {
+                    "proto3_optional": true
+                  }
+                }
+              }
+            },
+            "AuthnCheckResponse": {
+              "oneofs": {
+                "_idn": {
+                  "oneof": ["idn"]
+                }
+              },
+              "fields": {
+                "ok": {
+                  "type": "bool",
+                  "id": 1
+                },
+                "idn": {
+                  "type": "Idn",
+                  "id": 2,
+                  "options": {
+                    "proto3_optional": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -80,7 +80,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := jwtClaims{
-		Aud: os.Getenv("OIDC_BASE_URL"),
+		Aud: os.Getenv("OIDC_BASE_URL") + TokenEndpoint,
 		Iss: app.OAuthClientId(),
 		Sub: app.OAuthClientId(),
 	}
