@@ -1,9 +1,9 @@
 import { env } from '$env/dynamic/private';
 
-import { redirect } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit';
 
 import { home_path, sign_in_path } from '$lib/server/consts';
-import { check, start } from '$lib/server/sessions'
+import { check, start } from '$lib/server/sessions';
 
 import * as jose from 'jose';
 
@@ -18,7 +18,7 @@ export async function load({ cookies, fetch, url }) {
 
 	const code = url.searchParams.get('code');
 	if (!code) {
-		return redirect(302, authzEndpoint(url))
+		return redirect(302, authzEndpoint(url));
 	}
 
 	// Exchange authorisation code for tokens (using JWT for client authentication)
@@ -29,23 +29,21 @@ export async function load({ cookies, fetch, url }) {
 		.setSubject(env.client_id)
 		.setIssuedAt()
 		.setExpirationTime('5m')
-		.sign(await jose.importPKCS8(env.private_key, 'ES256'));;
+		.sign(await jose.importPKCS8(env.private_key, 'ES256'));
 
 	const resp = await fetch(env.token_endpoint, {
 		method: 'post',
 		headers: {
 			'content-type': 'application/x-www-form-urlencoded',
 		},
-		body: (
-			// Ref: https://www.rfc-editor.org/rfc/rfc7523.html#section-2.2
-			new URLSearchParams({
-				grant_type: 'authorization_code',
-				code,
-				client_id: env.client_id,
-				client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-				client_assertion: jwt,
-			})
-		).toString(),
+		// Ref: https://www.rfc-editor.org/rfc/rfc7523.html#section-2.2
+		body: new URLSearchParams({
+			grant_type: 'authorization_code',
+			code,
+			client_id: env.client_id,
+			client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+			client_assertion: jwt,
+		}).toString(),
 	});
 
 	if (!resp.ok) {

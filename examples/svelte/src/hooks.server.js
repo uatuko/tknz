@@ -10,7 +10,7 @@ async function authHandle({ event, resolve }) {
 		return resolve(event);
 	}
 
-	if (!await check(event.cookies)) {
+	if (!(await check(event.cookies))) {
 		return redirect(302, sign_in_path);
 	}
 
