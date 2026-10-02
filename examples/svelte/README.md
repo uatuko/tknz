@@ -87,3 +87,30 @@ values (
 update idn_srcs set attrs['_rev'] = to_jsonb(extract(epoch from clock_timestamp())::integer)
 where idn_id = '06gfo7f5bhuatca9jt4ha1hp7g' and provider_id = 'local-password';
 ```
+
+## Convert *.proto files to JSON descriptors
+
+```sh
+node cmd/mkpb.js \
+  --protodir=../../proto \
+  --out=./src/lib/server/proto/authn.json \
+  tknz/v1/authn.proto
+```
+
+## Generate protobuf types
+
+```sh
+npx proto-loader-gen-types \
+  --defaults \
+  --oneofs \
+  --grpcLib=@grpc/grpc-js \
+  --includeDirs=../../proto \
+  --outDir=./src/lib/server/proto/ \
+  tknz/v1/authn.proto
+```
+
+To fix `Original file:` paths,
+
+```
+sed -i '' 's/\.\.\/\.\.\/proto\///g' src/lib/server/proto/tknz/v1/*.ts
+```
