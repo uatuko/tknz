@@ -51,7 +51,7 @@
 			>
 		</form>
 	{/if}
-	{#if providers.oidc.length > 0}
+	{#if providers.oidc?.length}
 		<div class="space-y-4">
 			{#if providers.use_login}
 				<div class="flex items-center gap-x-6">

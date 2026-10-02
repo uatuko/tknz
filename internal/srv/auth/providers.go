@@ -105,6 +105,11 @@ func providersHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Ensure atleast one sign-in method is available
+	if resp.UseLogin == false && len(resp.Oidc) == 0 {
+		resp.UseLogin = true
+	}
+
 	b, err := json.Marshal(resp)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to marshal response")
