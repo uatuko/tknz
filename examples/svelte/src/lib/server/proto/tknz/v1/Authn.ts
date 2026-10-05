@@ -1,4 +1,4 @@
-// Original file: ../../proto/tknz/v1/authn.proto
+// Original file: tknz/v1/authn.proto
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'

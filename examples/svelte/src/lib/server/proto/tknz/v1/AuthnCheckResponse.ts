@@ -1,4 +1,4 @@
-// Original file: ../../proto/tknz/v1/authn.proto
+// Original file: tknz/v1/authn.proto
 
 import type { Idn as _tknz_v1_Idn, Idn__Output as _tknz_v1_Idn__Output } from '../../tknz/v1/Idn';
 

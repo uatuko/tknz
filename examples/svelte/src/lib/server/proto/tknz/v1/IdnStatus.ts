@@ -1,4 +1,4 @@
-// Original file: ../../proto/tknz/v1/authn.proto
+// Original file: tknz/v1/authn.proto
 
 export const IdnStatus = {
   idn_pending: 0,
