@@ -34,6 +34,14 @@ go run ./cmd/mkjwks -keys .tmp/key.pem \
 
 ### DB
 
+```sh
+# create postgres user and database
+echo "create user tknz; create database tknz owner tknz;" | psql
+
+# db schema
+psql --username=tknz --dbname=tknz < db/schema.sql
+```
+
 ```sql
 -- create 'sys' space
 insert into spaces (id, slug, attrs) values ('sys', 'sys', '{}');
@@ -52,4 +60,18 @@ insert into jwks (id, space_id, attrs, params) values (
   '{}',
   '<jwk>'
 );
+```
+
+### Run
+
+```sh
+PGDATABASE=tknz PGUSER=tknz make run
+```
+
+### Smoke test
+
+```sh
+curl --http2 http://localhost:8080/oidc/.well-known/jwks.json
+
+# e.g. {"keys":[{"alg":"ES256","kid":"local","kty":"EC","use":"sig","crv":"P-256","x":"…","y":"…"}]}
 ```
