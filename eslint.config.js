@@ -2,16 +2,16 @@ import globals from 'globals';
 import js from '@eslint/js';
 import svelte from 'eslint-plugin-svelte';
 
-import { includeIgnoreFile } from '@eslint/compat';
+import { defineConfig, globalIgnores, includeIgnoreFile } from 'eslint/config';
 import { fileURLToPath } from 'node:url';
 
 import svelteConfig from './app/svelte.config.js';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+export default defineConfig([
 	includeIgnoreFile(gitignorePath),
+	globalIgnores(['examples/svelte/']),
 	js.configs.recommended,
 	...svelte.configs.recommended,
 	{
@@ -71,4 +71,4 @@ export default [
 			],
 		},
 	},
-];
+]);
