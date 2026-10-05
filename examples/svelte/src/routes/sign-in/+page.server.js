@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 
 import { redirect } from '@sveltejs/kit';
 
-import { home_path, sign_in_path } from '$lib/server/consts';
+import { home_path, sign_in_path } from '$lib/consts';
 import { check, start } from '$lib/server/sessions';
 
 import * as jose from 'jose';
