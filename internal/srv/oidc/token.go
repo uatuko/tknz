@@ -79,8 +79,15 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var aud string
+	if os.Getenv("OIDC_BASE_URL") != "" {
+		aud = os.Getenv("OIDC_BASE_URL") + TokenEndpoint
+	} else {
+		aud = fmt.Sprintf("http://%s%s", r.Host, r.RequestURI)
+	}
+
 	claims := jwtClaims{
-		Aud: os.Getenv("OIDC_BASE_URL") + TokenEndpoint,
+		Aud: aud,
 		Iss: app.OAuthClientId(),
 		Sub: app.OAuthClientId(),
 	}

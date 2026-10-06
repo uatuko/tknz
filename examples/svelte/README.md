@@ -74,14 +74,14 @@ values (
   '06gfo7f5bhuatca9jt4ha1hp7g',
   'local-password',
   'user',
-  '{
+  '{"pwd": {
     "typ":"argon2",
     "salt":"xzx5ISdtFChBP871mnc8nw==",
     "key":"0Qm8aK/kBOqoX5RcwkJBGGRlLOlVTcnzdJIJDPSwfhY=",
     "time":3,
     "memory":65536,
     "threads":4
-  }' -- password = 'pass'
+  }}' -- password = 'pass'
 );
 
 update idn_srcs set attrs['_rev'] = to_jsonb(extract(epoch from clock_timestamp())::integer)
