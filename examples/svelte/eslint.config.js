@@ -5,8 +5,6 @@ import svelte from 'eslint-plugin-svelte';
 import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import { fileURLToPath } from 'node:url';
 
-import svelteConfig from './svelte.config.js';
-
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
 export default defineConfig([
@@ -20,7 +18,6 @@ export default defineConfig([
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.js'],
-		languageOptions: { parserOptions: { svelteConfig } },
 	},
 	{
 		rules: {

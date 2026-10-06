@@ -1,12 +1,12 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { env } from '$env/dynamic/private';
+import { tknz_addr } from '$app/env/private';
 
 import authnProto from './proto/authn.json';
 
 /**
- * @import { ProtoGrpcType } from '$lib/server/proto/authn'
- * @import { AuthnClient } from '$lib/server/proto/tknz/v1/Authn'
+ * @import { ProtoGrpcType } from '#lib/server/proto/authn.js'
+ * @import { AuthnClient } from '#lib/server/proto/tknz/v1/Authn.js'
  *
  * @import {INamespace} from 'protobufjs'
  */
@@ -88,13 +88,13 @@ function client() {
 	);
 
 	let opts;
-	if (env.tknz_addr.startsWith('localhost:')) {
+	if (tknz_addr.startsWith('localhost:')) {
 		opts = grpc.credentials.createInsecure();
 	} else {
 		opts = grpc.credentials.createSsl();
 	}
 
-	_client = new defs.tknz.v1.Authn(env.tknz_addr, opts);
+	_client = new defs.tknz.v1.Authn(tknz_addr, opts);
 
 	return _client;
 }

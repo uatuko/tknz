@@ -1,6 +1,6 @@
 <script>
 	import { resolve } from '$app/paths';
-	import { home_path } from '$lib/consts';
+	import { home_path } from '#lib/consts.js';
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-white dark:bg-gray-900">
