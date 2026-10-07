@@ -1,11 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
-import { sign_in_path } from '$lib/consts';
-import { public_paths } from '$lib/server/consts';
-import { check } from '$lib/server/sessions';
+import { sign_in_path } from '#lib/consts.js';
+import { public_paths } from '#lib/server/consts.js';
+import { check } from '#lib/server/sessions.js';
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@sveltejs/kit/hooks').Handle} */
 async function authHandle({ event, resolve }) {
 	if (public_paths.includes(event.url.pathname)) {
 		return resolve(event);
