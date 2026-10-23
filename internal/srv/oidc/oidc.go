@@ -20,6 +20,7 @@ const (
 	loginHintKey           = "login_hint"
 	redirectUriKey         = "redirect_uri"
 	responseTypeKey        = "response_type"
+	stateKey               = "state"
 
 	clientAssertionTypeJwtBearer = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
 

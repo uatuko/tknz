@@ -273,6 +273,9 @@ func cbPasskey(w http.ResponseWriter, r *http.Request, state *db.AuthState, p *d
 
 	q := u.Query()
 	q.Set(codeKey, code.Id())
+	if state.ClientState() != "" {
+		q.Set(stateKey, state.ClientState())
+	}
 	u.RawQuery = q.Encode()
 
 	w.Header().Add("Location", u.String())
@@ -354,6 +357,9 @@ func cbPassword(w http.ResponseWriter, r *http.Request, state *db.AuthState, p *
 
 	q := u.Query()
 	q.Set(codeKey, code.Id())
+	if state.ClientState() != "" {
+		q.Set(stateKey, state.ClientState())
+	}
 	u.RawQuery = q.Encode()
 
 	w.Header().Add("Location", u.String())
