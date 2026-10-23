@@ -469,6 +469,9 @@ func credentialsHandler(w http.ResponseWriter, r *http.Request) {
 
 	q := u.Query()
 	q.Set(codeKey, code.Id())
+	if state.ClientState() != "" {
+		q.Set(stateKey, state.ClientState())
+	}
 	u.RawQuery = q.Encode()
 
 	w.Header().Add("Location", u.String())

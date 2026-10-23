@@ -58,5 +58,5 @@ func AuthorizationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth.WriteAuthRedirect(r.Context(), w, app, redirectUri, r.FormValue(loginHintKey))
+	auth.WriteAuthRedirect(r.Context(), w, app, redirectUri, r.FormValue(loginHintKey), r.FormValue(stateKey))
 }

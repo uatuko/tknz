@@ -77,10 +77,11 @@ func New() http.Handler {
 	return mux
 }
 
-func WriteAuthRedirect(ctx context.Context, w http.ResponseWriter, app *db.App, redirectUri string, loginHint string) {
+func WriteAuthRedirect(ctx context.Context, w http.ResponseWriter, app *db.App, redirectUri string, loginHint string, clientState string) {
 	state, err := db.NewAuthState(ctx, stateTtl, db.AuthStateAttrs{
 		AppId:       app.Id(),
 		ClientId:    app.OAuthClientId(),
+		ClientState: clientState,
 		RedirectUri: redirectUri,
 	})
 	if err != nil {

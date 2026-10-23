@@ -31,6 +31,10 @@ func (s *AuthState) ClientId() string {
 	return s.attrs.(AuthStateAttrs).ClientId
 }
 
+func (s *AuthState) ClientState() string {
+	return s.attrs.(AuthStateAttrs).ClientState
+}
+
 func (s *AuthState) Id() string {
 	return strings.TrimPrefix(s.id, authStatePrefix)
 }
@@ -95,6 +99,7 @@ func (s *AuthState) WebAuthnUserId() string {
 type AuthStateAttrs struct {
 	AppId       string `json:"app_id,omitempty"`
 	ClientId    string `json:"client_id,omitempty"`
+	ClientState string `json:"client_state,omitempty"`
 	RedirectUri string `json:"redirect_uri,omitempty"`
 
 	Login             string `json:"login,omitempty"`
