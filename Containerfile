@@ -10,12 +10,12 @@ FROM --platform=$BUILDPLATFORM golang:1-trixie AS builder
 ARG TARGETOS
 ARG TARGETARCH
 
-COPY go.mod go.sum main.go /tmp/buildroot/
-COPY internal/ /tmp/buildroot/internal/
-COPY pb/ /tmp/buildroot/pb/
+COPY go.mod go.sum main.go /tmp/build/
+COPY internal/ /tmp/build/internal/
+COPY pb/ /tmp/build/pb/
 
 RUN \
-	cd /tmp/buildroot \
+	cd /tmp/build \
 	&& \
 	CGO_ENABLED=0 \
 	GOARCH=${TARGETARCH} \
