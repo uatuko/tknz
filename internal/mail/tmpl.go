@@ -3,7 +3,7 @@ package mail
 import "html/template"
 
 const (
-	signUpVerityHtmlFile = ".dist/tmpl/email/sign-up/verify.html"
+	signUpVerityHtmlFile = ".static/tmpl/email/sign-up/verify.html"
 )
 
 var (

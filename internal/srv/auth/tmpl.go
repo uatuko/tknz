@@ -3,9 +3,9 @@ package auth
 import "html/template"
 
 const (
-	errorHtmlFile = ".dist/tmpl/auth/errors/server.html"
+	errorHtmlFile = ".static/tmpl/auth/errors/server.html"
 
-	signUpVerifyEmailHtmlFile = ".dist/tmpl/auth/sign-up/verify-email.html"
+	signUpVerifyEmailHtmlFile = ".static/tmpl/auth/sign-up/verify-email.html"
 )
 
 var (
