@@ -8,11 +8,117 @@ on:
       - published
   workflow_dispatch:
 
+# Images are pushed to ghcr.io by digest only (untagged), and tagged by the `containers` job
+# once all images are built successfully (and pushed to docker hub).
+concurrency:
+  group: ${{ github.workflow_ref }}
+
 jobs:
-  container:
+  app:
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.job }}
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v7
+      - uses: docker/metadata-action@v6
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}-app
+      - name: Build and publish (by digest)
+        uses: docker/build-push-action@v7
+        id: build
+        with:
+          annotations: ${{ steps.meta.outputs.annotations }}
+          context: app
+          file: app/Containerfile
+          outputs: type=image,name=ghcr.io/${{ github.repository }}-app,push-by-digest=true,name-canonical=true,push=true
+          platforms: |
+            linux/amd64
+            linux/arm64
+
+  tmpl:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v7
+      - uses: docker/metadata-action@v6
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}-tmpl
+      - name: Build and publish (by digest)
+        uses: docker/build-push-action@v7
+        id: build
+        with:
+          annotations: ${{ steps.meta.outputs.annotations }}
+          context: tmpl
+          file: tmpl/Containerfile
+          outputs: type=image,name=ghcr.io/${{ github.repository }}-tmpl,push-by-digest=true,name-canonical=true,push=true
+          platforms: |
+            linux/amd64
+            linux/arm64
+
+  tknz:
+    runs-on: ubuntu-latest
+    needs:
+      - app
+      - tmpl
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v7
+      - uses: docker/metadata-action@v6
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+      - name: Build and publish (by digest)
+        uses: docker/build-push-action@v7
+        id: build
+        with:
+          annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: |
+            APP_IMAGE=ghcr.io/${{ github.repository }}-app@${{ needs.app.outputs.digest }}
+            TMPL_IMAGE=ghcr.io/${{ github.repository }}-tmpl@${{ needs.tmpl.outputs.digest }}
+          context: .
+          file: Containerfile
+          outputs: type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
+          platforms: |
+            linux/amd64
+            linux/arm64
+
+  containers:
+    runs-on: ubuntu-latest
+    needs:
+      - app
+      - tmpl
+      - tknz
     permissions:
       contents: read
       packages: write
@@ -27,13 +133,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          cache: npm
-          node-version: 24
-      - run: npm ci
-      - run: npm run build
       - uses: docker/metadata-action@v6
         id: meta
         with:
@@ -45,23 +144,59 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-      - name: Build and publish
-        uses: docker/build-push-action@v7
-        with:
-          annotations: ${{ steps.meta.outputs.annotations }}
-          context: .
-          file: Containerfile
-          platforms: |
-            linux/amd64
-            linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+      - name: Tag images
+        if: steps.meta.outputs.tags != ''
+        env:
+          APP_DIGEST: ${{ needs.app.outputs.digest }}
+          REPO: ghcr.io/${{ github.repository }}
+          TAGS: ${{ steps.meta.outputs.tags }}
+          TKNZ_DIGEST: ${{ needs.tknz.outputs.digest }}
+          TMPL_DIGEST: ${{ needs.tmpl.outputs.digest }}
+        run: |
+          # tag <suffix> <digest>
+          #   tags `${REPO}${suffix}@${digest}` with all tags, after adding `suffix` to image names
+          #   (e.g. `uatuko/tknz:1.2.3` -> `uatuko/tknz-app:1.2.3`)
+          tag() {
+            local args=()
+            for tag in ${TAGS}; do
+              args+=(--tag "${tag%:*}${1}:${tag##*:}")
+            done
+
+            docker buildx imagetools create "${args[@]}" "${REPO}${1}@${2}"
+          }
+
+          # tag the main image last so its tags never reference untagged app/tmpl images
+          tag -app "${APP_DIGEST}"
+          tag -tmpl "${TMPL_DIGEST}"
+          tag "" "${TKNZ_DIGEST}"
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs:
+      - containers
+    # Run even when builds (or containers) fail to remove untagged images pushed by failed runs
+    if: ${{ !cancelled() }}
+    permissions:
+      packages: write
+    steps:
       - name: Extract repo name
         id: repo
         run: echo "name=$(basename ${{ github.repository }})" >> $GITHUB_OUTPUT
       - uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ steps.repo.outputs.name }}
+          package-type: container
+          min-versions-to-keep: 2
+          delete-only-untagged-versions: true
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ steps.repo.outputs.name }}-app
+          package-type: container
+          min-versions-to-keep: 2
+          delete-only-untagged-versions: true
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ steps.repo.outputs.name }}-tmpl
           package-type: container
           min-versions-to-keep: 2
           delete-only-untagged-versions: true
