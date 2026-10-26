@@ -1,0 +1,14 @@
+FROM --platform=$BUILDPLATFORM node:lts-alpine AS builder
+
+WORKDIR /tmp/build/tmpl
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . ./
+RUN npm run build
+
+
+FROM scratch
+
+COPY --from=builder /tmp/build/.static/tmpl/ /
