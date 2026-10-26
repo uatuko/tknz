@@ -1,5 +1,5 @@
-ARG app_image=uatuko/tknz-app:latest
-ARG tmpl_image=uatuko/tknz-tmpl:latest
+ARG app_image
+ARG tmpl_image
 
 FROM ${app_image} AS app
 FROM ${tmpl_image} AS tmpl

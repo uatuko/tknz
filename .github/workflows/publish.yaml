@@ -8,8 +8,9 @@ on:
       - published
   workflow_dispatch:
 
-# Images are pushed to ghcr.io by digest only (untagged), and tagged by the `containers` job
-# once all images are built successfully (and pushed to docker hub).
+# Images are pushed to ghcr.io by digest only (untagged). Only the final `tknz` image is tagged (and pushed to docker
+# hub) by the `container` job once all images are built successfully. `app` and `tmpl` images are intermediate build
+# artifacts and remain untagged.
 concurrency:
   group: ${{ github.workflow_ref }}
 
@@ -104,8 +105,8 @@ jobs:
         with:
           annotations: ${{ steps.meta.outputs.annotations }}
           build-args: |
-            APP_IMAGE=ghcr.io/${{ github.repository }}-app@${{ needs.app.outputs.digest }}
-            TMPL_IMAGE=ghcr.io/${{ github.repository }}-tmpl@${{ needs.tmpl.outputs.digest }}
+            app_image=ghcr.io/${{ github.repository }}-app@${{ needs.app.outputs.digest }}
+            tmpl_image=ghcr.io/${{ github.repository }}-tmpl@${{ needs.tmpl.outputs.digest }}
           context: .
           file: Containerfile
           outputs: type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
@@ -113,11 +114,9 @@ jobs:
             linux/amd64
             linux/arm64
 
-  containers:
+  container:
     runs-on: ubuntu-latest
     needs:
-      - app
-      - tmpl
       - tknz
     permissions:
       contents: read
@@ -144,37 +143,25 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-      - name: Tag images
+      - name: Tag image
         if: steps.meta.outputs.tags != ''
         env:
-          APP_DIGEST: ${{ needs.app.outputs.digest }}
+          DIGEST: ${{ needs.tknz.outputs.digest }}
           REPO: ghcr.io/${{ github.repository }}
           TAGS: ${{ steps.meta.outputs.tags }}
-          TKNZ_DIGEST: ${{ needs.tknz.outputs.digest }}
-          TMPL_DIGEST: ${{ needs.tmpl.outputs.digest }}
         run: |
-          # tag <suffix> <digest>
-          #   tags `${REPO}${suffix}@${digest}` with all tags, after adding `suffix` to image names
-          #   (e.g. `uatuko/tknz:1.2.3` -> `uatuko/tknz-app:1.2.3`)
-          tag() {
-            local args=()
-            for tag in ${TAGS}; do
-              args+=(--tag "${tag%:*}${1}:${tag##*:}")
-            done
+          args=()
+          for tag in ${TAGS}; do
+            args+=(--tag "${tag}")
+          done
 
-            docker buildx imagetools create "${args[@]}" "${REPO}${1}@${2}"
-          }
-
-          # tag the main image last so its tags never reference untagged app/tmpl images
-          tag -app "${APP_DIGEST}"
-          tag -tmpl "${TMPL_DIGEST}"
-          tag "" "${TKNZ_DIGEST}"
+          docker buildx imagetools create "${args[@]}" "${REPO}@${DIGEST}"
 
   cleanup:
     runs-on: ubuntu-latest
     needs:
-      - containers
-    # Run even when builds (or containers) fail to remove untagged images pushed by failed runs
+      - container
+    # Run even when builds (or container) fail to remove untagged images pushed by failed runs
     if: ${{ !cancelled() }}
     permissions:
       packages: write
