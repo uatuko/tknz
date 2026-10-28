@@ -4,7 +4,7 @@
 # build
 .astro/
 .build/
-.dist/
+.static/
 .svelte-kit/
 vendor/
 

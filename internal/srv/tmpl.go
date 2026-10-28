@@ -3,7 +3,7 @@ package srv
 import "html/template"
 
 const (
-	errorHtmlFile = ".dist/tmpl/errors/server.html"
+	errorHtmlFile = ".static/tmpl/errors/server.html"
 )
 
 var (

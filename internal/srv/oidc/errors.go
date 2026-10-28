@@ -23,8 +23,8 @@ const (
 	ErrNotFound errorCode = "not_found"
 	ErrUnknown  errorCode = "unknown"
 
-	errorRpTmplFile     = ".dist/tmpl/oidc/errors/rp.html"
-	errorServerTmplFile = ".dist/tmpl/oidc/errors/server.html"
+	errorRpTmplFile     = ".static/tmpl/oidc/errors/rp.html"
+	errorServerTmplFile = ".static/tmpl/oidc/errors/server.html"
 )
 
 var (

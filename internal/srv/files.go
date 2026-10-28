@@ -49,13 +49,13 @@ func filesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fname := ".dist/app"
+	fname := ".static/app"
 	if r.URL.Path == "/" {
 		fname += "/index.html"
 	} else {
 		if path.Dir(r.URL.Path) == "/_a" {
 			// Astro (template) assets
-			fname = ".dist/tmpl"
+			fname = ".static/tmpl"
 		}
 
 		if path.Ext(r.URL.Path) == "" {

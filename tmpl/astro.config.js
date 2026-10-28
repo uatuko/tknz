@@ -38,7 +38,7 @@ export default defineConfig({
 		format: 'preserve',
 	},
 	integrations: [htmlmin()],
-	outDir: '../.dist/tmpl',
+	outDir: '../.static/tmpl',
 	trailingSlash: 'always',
 	vite: {
 		build: {
