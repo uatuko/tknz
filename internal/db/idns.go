@@ -241,6 +241,34 @@ func (src *IdnSrc) SetAttrsCr(ctx context.Context, cr IdnSrcAttrsCr) error {
 	return nil
 }
 
+func (src *IdnSrc) SetAttrsPwd(ctx context.Context, pwd IdnSrcAttrsPwd) error {
+	attrs := src.attrs
+	attrs.Rev += 1
+	attrs.Pwd = &pwd
+
+	qry := `
+		update idn_srcs
+		set
+			attrs = $4::jsonb
+		where
+			idn_id = $1::text
+			and provider_id = $2::text
+			and attrs['_rev']::integer = $3::integer
+		returning attrs['_rev']::integer;
+	`
+
+	if err := pg.QueryRow(ctx, qry, src.idnId, src.providerId, src.Rev(), attrs).Scan(&attrs.Rev); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return wrapError(err, ErrConflict)
+		}
+
+		return wrapError(err, ErrUnknown)
+	}
+
+	src.attrs = attrs
+	return nil
+}
+
 func (src *IdnSrc) Sub() string {
 	return src.sub
 }
@@ -532,6 +560,33 @@ func RetrieveIdnSrc(ctx context.Context, providerId string, sub string) (*IdnSrc
 
 	var src IdnSrc
 	if err := pg.QueryRow(ctx, qry, providerId, sub).Scan(&src.idnId, &src.providerId, &src.sub, &src.attrs); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, wrapError(err, ErrNotFound)
+		}
+
+		return nil, wrapError(err, ErrUnknown)
+	}
+
+	return &src, nil
+}
+
+func RetrieveIdnSrcByIdnIdAndProviderSlug(ctx context.Context, idnId string, slug ProviderSlug) (*IdnSrc, error) {
+	qry := `
+		select
+			s.idn_id,
+			s.provider_id,
+			s.sub,
+			s.attrs
+		from idn_srcs s inner join providers p
+			on s.provider_id = p.id
+		where
+			s.idn_id = $1::text
+			and p.slug = $2::text
+		;
+	`
+
+	var src IdnSrc
+	if err := pg.QueryRow(ctx, qry, idnId, slug).Scan(&src.idnId, &src.providerId, &src.sub, &src.attrs); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, wrapError(err, ErrNotFound)
 		}
