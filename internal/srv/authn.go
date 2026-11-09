@@ -127,18 +127,31 @@ func checkAccessToken(ctx context.Context, token string) (*db.Idn, error) {
 		return nil, errInvalidAccessToken
 	}
 
-	digest := sha256.Sum256(pbToken.GetToken())
+	b, err = proto.Marshal(pbToken.GetClaims())
+	if err != nil {
+		fmt.Printf("[error] failed to marshal, err: %v\n", err)
+		return nil, ErrInternal
+	}
+
+	b = append(b, pbToken.GetId()...)
+	digest := sha256.Sum256(b)
 	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
 		fmt.Println("[error] invalid signature")
 		return nil, errInvalidAccessToken
 	}
 
-	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetToken())
+	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetId())
 	if err != nil {
 		if !errors.Is(err, db.ErrNotFound) {
 			fmt.Printf("[error] failed to retrieve idn, err: %v\n", err)
 		}
 
+		return nil, errInvalidAccessToken
+	}
+
+	claims := pbToken.GetClaims()
+	if idn.Id() != claims.GetSub() {
+		fmt.Printf("[error] token subject mismatch (want: %v, have: %v)\n", claims.GetSub(), idn.Id())
 		return nil, errInvalidAccessToken
 	}
 

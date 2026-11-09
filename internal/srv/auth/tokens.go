@@ -27,12 +27,13 @@ type idTokenClaims struct {
 }
 
 func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string, error) {
-	token, err := db.NewAuthToken(ctx, accessTokenTtl, db.AuthTokenAttrs{
+	attrs := db.AuthTokenAttrs{
 		AppId:      app.Id(),
 		ProviderId: code.Attrs().ProviderId,
 		Aud:        app.Attrs().Aud,
 		Sub:        code.Attrs().Sub,
-	})
+	}
+	token, err := db.NewAuthToken(ctx, accessTokenTtl, attrs)
 	if err != nil {
 		return "", err
 	}
@@ -42,19 +43,31 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 		return "", err
 	}
 
-	tokenBytes := token.Token()
-	sig, err := key.Sign(ctx, tokenBytes)
+	claims := pb.Claims{
+		Aud: &attrs.Aud,
+		Iss: &attrs.ProviderId,
+		Sub: &attrs.Sub,
+	}
+
+	b, err := proto.Marshal(&claims)
+	if err != nil {
+		return "", err
+	}
+
+	b = append(b, token.Id()...)
+	sig, err := key.Sign(ctx, b)
 	if err != nil {
 		return "", err
 	}
 
 	pbToken := pb.Token{
+		Claims:    &claims,
+		Id:        token.Id(),
 		Kid:       key.Kid(),
-		Token:     tokenBytes,
 		Signature: sig,
 	}
 
-	b, err := proto.Marshal(&pbToken)
+	b, err = proto.Marshal(&pbToken)
 	if err != nil {
 		return "", err
 	}
