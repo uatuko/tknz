@@ -25,8 +25,8 @@ all: $(binary)
 .tmp:
 	mkdir .tmp
 
-.tmp/key.pem: .tmp
-	openssl ecparam -name prime256v1 -genkey -noout -out .tmp/key.pem
+.tmp/key.pem: | .tmp
+	openssl ecparam -name prime256v1 -genkey -noout -out $@
 
 clean:
 	go clean
