@@ -39,11 +39,11 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 		return resp, nil
 	}
 
-	if errors.Is(err, auth.ErrInvalidAccessToken) {
+	if errors.Is(err, auth.ErrInvalidToken) {
 		return resp, nil
 	}
 
-	if !errors.Is(err, auth.ErrInvalidAccessTokenPrefix) {
+	if !errors.Is(err, auth.ErrInvalidTokenPrefix) {
 		return nil, err
 	}
 

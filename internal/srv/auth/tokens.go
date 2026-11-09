@@ -22,11 +22,6 @@ import (
 	"go.tknz.dev/internal/srv/common"
 )
 
-var (
-	ErrInvalidAccessTokenPrefix = errors.New("invalid access token prefix")
-	ErrInvalidAccessToken       = errors.New("invalid access token")
-)
-
 type idTokenClaims struct {
 	Aud   string `json:"aud,omitempty"`
 	Exp   int64  `json:"exp,omitempty"`
@@ -43,50 +38,52 @@ type idTokenClaims struct {
 // token is invalid, or any other error for internal failures.
 func CheckAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, error) {
 	if !strings.HasPrefix(token, AccessTokenPrefix) {
-		return nil, nil, ErrInvalidAccessTokenPrefix
+		return nil, nil, ErrInvalidTokenPrefix
 	}
 
 	b, err := base64.RawURLEncoding.DecodeString(token[len(AccessTokenPrefix):])
 	if err != nil {
 		fmt.Printf("[error] failed to decode, err: %v\n", err)
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	var pbToken pb.Token
 	err = proto.Unmarshal(b, &pbToken)
 	if err != nil {
 		fmt.Printf("[error] failed to unmarshal, err: %v\n", err)
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	jwk, err := db.RetrieveJwk(ctx, common.SysSpaceId, pbToken.GetKid())
 	if err != nil {
 		fmt.Printf("[error] failed to retrieve jwk, err: %v\n", err)
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	params := jwk.Params()
 	key, err := params.EcPublicKey()
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to get ec public key: %w", err)
+		fmt.Printf("[error] failed to retrieve ec public key, err: %v\n", err)
+		return nil, nil, ErrServerError
 	}
 
 	sig, err := kms.ParseEcSig(key.Curve, pbToken.GetSignature())
 	if err != nil {
 		fmt.Printf("[error] invalid signature, err: %v\n", err)
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	b, err = proto.Marshal(pbToken.GetClaims())
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to marshal claims: %w", err)
+		fmt.Printf("[error] failed to marshal claims, err: %v\n", err)
+		return nil, nil, ErrServerError
 	}
 
 	b = append(b, pbToken.GetId()...)
 	digest := sha256.Sum256(b)
 	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
 		fmt.Println("[error] invalid signature")
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetId())
@@ -95,13 +92,13 @@ func CheckAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, e
 			fmt.Printf("[error] failed to retrieve idn, err: %v\n", err)
 		}
 
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	claims := pbToken.GetClaims()
 	if idn.Id() != claims.GetSub() {
 		fmt.Printf("[error] token subject mismatch (want: %v, have: %v)\n", claims.GetSub(), idn.Id())
-		return nil, nil, ErrInvalidAccessToken
+		return nil, nil, ErrInvalidToken
 	}
 
 	return idn, claims, nil

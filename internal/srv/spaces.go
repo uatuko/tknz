@@ -22,11 +22,11 @@ func (s *spaces) Create(ctx context.Context, req *pb.SpacesCreateRequest) (*pb.S
 
 	idn, _, err := auth.CheckAccessToken(ctx, token)
 	if err != nil {
-		if errors.Is(err, auth.ErrInvalidAccessToken) {
+		if errors.Is(err, auth.ErrInvalidToken) {
 			return nil, NewError(ErrPermissionDenied, err)
 		}
 
-		if errors.Is(err, auth.ErrInvalidAccessTokenPrefix) {
+		if errors.Is(err, auth.ErrInvalidTokenPrefix) {
 			// TODO: check for federated tokens
 			return nil, NewErrorf(ErrUnauthenticated, "invalid or unsupported credentials")
 		}
