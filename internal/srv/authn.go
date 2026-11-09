@@ -65,12 +65,9 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 	resp.Ok = true
 	resp.Idn = mapIdnToPb(idn)
 	resp.Claims = &pb.Claims{
-		Aud: []string{},
+		Aud: append([]string{}, jwtClaims.Aud()...),
 	}
 
-	if jwtClaims.Aud() != "" {
-		resp.Claims.Aud = append(resp.Claims.Aud, jwtClaims.Aud())
-	}
 	if jwtClaims.Iss() != "" {
 		iss := jwtClaims.Iss()
 		resp.Claims.Iss = &iss
