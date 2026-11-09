@@ -32,7 +32,7 @@
     "svelte-check": "^4.7.5",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.3.4"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.5",
