@@ -23,12 +23,12 @@ import (
 )
 
 type idTokenClaims struct {
-	Aud   string `json:"aud,omitempty"`
-	Exp   int64  `json:"exp,omitempty"`
-	Iat   int64  `json:"iat,omitempty"`
-	Iss   string `json:"iss,omitempty"`
-	Nonce string `json:"nonce,omitempty"`
-	Sub   string `json:"sub,omitempty"`
+	Aud   []string `json:"aud,omitempty"`
+	Exp   int64    `json:"exp,omitempty"`
+	Iat   int64    `json:"iat,omitempty"`
+	Iss   string   `json:"iss,omitempty"`
+	Nonce string   `json:"nonce,omitempty"`
+	Sub   string   `json:"sub,omitempty"`
 }
 
 // CheckAccessToken validates an access token issued by NewAccessToken and returns the identity and claims
@@ -164,7 +164,7 @@ func NewIdToken(ctx context.Context, code *db.AuthCode) (string, error) {
 
 	now := time.Now().UTC()
 	payload := jwsEncode(idTokenClaims{
-		Aud: code.ClientId(),
+		Aud: []string{code.ClientId()},
 		Exp: now.Add(idTokenTtl).Unix(),
 		Iat: now.Unix(),
 		Sub: code.Sub(),
