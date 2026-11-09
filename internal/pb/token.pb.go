@@ -23,7 +23,7 @@ const (
 
 type Claims struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Aud           *string                `protobuf:"bytes,1,opt,name=aud,proto3,oneof" json:"aud,omitempty"`
+	Aud           []string               `protobuf:"bytes,1,rep,name=aud,proto3" json:"aud,omitempty"`
 	Iss           *string                `protobuf:"bytes,2,opt,name=iss,proto3,oneof" json:"iss,omitempty"`
 	Sub           *string                `protobuf:"bytes,3,opt,name=sub,proto3,oneof" json:"sub,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -60,11 +60,11 @@ func (*Claims) Descriptor() ([]byte, []int) {
 	return file_proto_tknz_detail_token_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Claims) GetAud() string {
-	if x != nil && x.Aud != nil {
-		return *x.Aud
+func (x *Claims) GetAud() []string {
+	if x != nil {
+		return x.Aud
 	}
-	return ""
+	return nil
 }
 
 func (x *Claims) GetIss() string {
@@ -157,12 +157,11 @@ var File_proto_tknz_detail_token_proto protoreflect.FileDescriptor
 
 const file_proto_tknz_detail_token_proto_rawDesc = "" +
 	"\n" +
-	"\x1dproto/tknz/detail/token.proto\x12\vtknz.detail\"e\n" +
-	"\x06Claims\x12\x15\n" +
-	"\x03aud\x18\x01 \x01(\tH\x00R\x03aud\x88\x01\x01\x12\x15\n" +
-	"\x03iss\x18\x02 \x01(\tH\x01R\x03iss\x88\x01\x01\x12\x15\n" +
-	"\x03sub\x18\x03 \x01(\tH\x02R\x03sub\x88\x01\x01B\x06\n" +
-	"\x04_audB\x06\n" +
+	"\x1dproto/tknz/detail/token.proto\x12\vtknz.detail\"X\n" +
+	"\x06Claims\x12\x10\n" +
+	"\x03aud\x18\x01 \x03(\tR\x03aud\x12\x15\n" +
+	"\x03iss\x18\x02 \x01(\tH\x00R\x03iss\x88\x01\x01\x12\x15\n" +
+	"\x03sub\x18\x03 \x01(\tH\x01R\x03sub\x88\x01\x01B\x06\n" +
 	"\x04_issB\x06\n" +
 	"\x04_sub\"t\n" +
 	"\x05Token\x12\x0e\n" +

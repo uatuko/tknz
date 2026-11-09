@@ -64,7 +64,17 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 
 	resp.Ok = true
 	resp.Idn = mapIdnToPb(idn)
-	resp.Claims = newTokenClaims(jwtClaims.Aud(), jwtClaims.Iss())
+	resp.Claims = &pb.Claims{
+		Aud: []string{},
+	}
+
+	if jwtClaims.Aud() != "" {
+		resp.Claims.Aud = append(resp.Claims.Aud, jwtClaims.Aud())
+	}
+	if jwtClaims.Iss() != "" {
+		iss := jwtClaims.Iss()
+		resp.Claims.Iss = &iss
+	}
 
 	return resp, nil
 }
@@ -163,17 +173,4 @@ func mkJwkFunc(appId string) jwt.JwkFunc {
 
 		return nil, fmt.Errorf("jwk not found, want: %s, have: %v", kid, have)
 	}
-}
-
-func newTokenClaims(aud string, iss string) *pb.Claims {
-	claims := &pb.Claims{}
-	if aud != "" {
-		claims.Aud = &aud
-	}
-
-	if iss != "" {
-		claims.Iss = &iss
-	}
-
-	return claims
 }

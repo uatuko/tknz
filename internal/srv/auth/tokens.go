@@ -122,9 +122,12 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 	}
 
 	claims := pb.Claims{
-		Aud: &attrs.Aud,
+		Aud: []string{},
 		Iss: &attrs.ProviderId,
 		Sub: &attrs.Sub,
+	}
+	if app.Aud() != "" {
+		claims.Aud = append(claims.Aud, app.Aud())
 	}
 
 	b, err := proto.Marshal(&claims)

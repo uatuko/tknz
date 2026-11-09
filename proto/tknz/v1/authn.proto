@@ -16,7 +16,7 @@ enum IdnStatus {
 }
 
 message Claims {
-	optional string aud = 1;
+	repeated string aud = 1;
 	optional string iss = 2;
 }
 

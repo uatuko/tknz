@@ -5,7 +5,7 @@ package tknz.detail;
 option go_package = "go.tknz.dev/internal/pb";
 
 message Claims {
-	optional string aud = 1;
+	repeated string aud = 1;
 	optional string iss = 2;
 	optional string sub = 3;
 }
