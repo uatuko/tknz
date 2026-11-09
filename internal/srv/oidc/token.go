@@ -91,8 +91,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 		Iss: app.OAuthClientId(),
 		Sub: app.OAuthClientId(),
 	}
-	attrs := app.Attrs()
-	if err := jwtValidate(r.FormValue(clientAssertionKey), claims, attrs.Keys); err != nil {
+	if err := jwtValidate(r.FormValue(clientAssertionKey), claims, app.Keys()); err != nil {
 		log.Warn().Err(err).Msg("failed to validate client assertion")
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -118,10 +117,10 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if app.OAuthClientId() != code.Attrs().ClientId {
+	if app.OAuthClientId() != code.ClientId() {
 		log.Warn().
 			Str("client_id_app", app.OAuthClientId()).
-			Str("client_id_code", code.Attrs().ClientId).
+			Str("client_id_code", code.ClientId()).
 			Msg("client id for oidc code and app doesn't match")
 		w.WriteHeader(http.StatusBadRequest)
 		return

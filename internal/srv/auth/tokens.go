@@ -107,9 +107,9 @@ func CheckAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, e
 func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string, error) {
 	attrs := db.AuthTokenAttrs{
 		AppId:      app.Id(),
-		ProviderId: code.Attrs().ProviderId,
-		Aud:        app.Attrs().Aud,
-		Sub:        code.Attrs().Sub,
+		ProviderId: code.ProviderId(),
+		Aud:        app.Aud(),
+		Sub:        code.Sub(),
 	}
 	token, err := db.NewAuthToken(ctx, accessTokenTtl, attrs)
 	if err != nil {
@@ -161,10 +161,10 @@ func NewIdToken(ctx context.Context, code *db.AuthCode) (string, error) {
 
 	now := time.Now().UTC()
 	payload := jwsEncode(idTokenClaims{
-		Aud: code.Attrs().ClientId,
+		Aud: code.ClientId(),
 		Exp: now.Add(idTokenTtl).Unix(),
 		Iat: now.Unix(),
-		Sub: code.Attrs().Sub,
+		Sub: code.Sub(),
 	})
 
 	return jwsSign(ctx, &header, payload)
