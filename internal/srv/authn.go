@@ -2,24 +2,17 @@ package srv
 
 import (
 	"context"
-	"crypto/ecdsa"
-	"crypto/sha256"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"strings"
 
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/protobuf/proto"
 
 	"github.com/rs/zerolog"
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/jose/jwk"
 	"go.tknz.dev/internal/jose/jwt"
-	"go.tknz.dev/internal/kms"
-	pbi "go.tknz.dev/internal/pb"
 	"go.tknz.dev/internal/srv/auth"
-	"go.tknz.dev/internal/srv/common"
 	"go.tknz.dev/pb"
 )
 
@@ -34,35 +27,44 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 	}
 
 	token := req.GetToken()
-	idn, claims, err := checkAccessToken(ctx, token)
+	idn, claims, err := auth.CheckAccessToken(ctx, token)
+	if err == nil {
+		resp.Ok = true
+		resp.Idn = mapIdnToPb(idn)
+		resp.Claims = &pb.Claims{
+			Aud: claims.Aud,
+			Iss: claims.Iss,
+		}
+
+		return resp, nil
+	}
+
+	if errors.Is(err, auth.ErrInvalidAccessToken) {
+		return resp, nil
+	}
+
+	if !errors.Is(err, auth.ErrInvalidAccessTokenPrefix) {
+		return nil, err
+	}
+
+	appId := req.GetAppId()
+	if appId == "" {
+		// No app id, can't validate federated tokens
+		return resp, nil
+	}
+
+	idn, jwtClaims, err := checkJwt(ctx, appId, token)
 	if err != nil {
-		if errors.Is(err, errInvalidAccessToken) {
+		if errors.Is(err, errInvalidJwt) {
 			return resp, nil
 		}
 
-		if errors.Is(err, errInvalidAccessTokenPrefix) {
-			appId := req.GetAppId()
-			if appId == "" {
-				// No app id, can't validate federated tokens
-				return resp, nil
-			}
-
-			idn, claims, err = checkJwt(ctx, appId, token)
-			if err != nil {
-				if errors.Is(err, errInvalidJwt) {
-					return resp, nil
-				}
-
-				return nil, err
-			}
-		} else {
-			return nil, err
-		}
+		return nil, err
 	}
 
 	resp.Ok = true
 	resp.Idn = mapIdnToPb(idn)
-	resp.Claims = claims
+	resp.Claims = newTokenClaims(jwtClaims.Aud(), jwtClaims.Iss())
 
 	return resp, nil
 }
@@ -91,78 +93,7 @@ func accessTokenFromCtx(ctx context.Context) (string, error) {
 	return token, nil
 }
 
-func checkAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, error) {
-	if !strings.HasPrefix(token, auth.AccessTokenPrefix) {
-		return nil, nil, errInvalidAccessTokenPrefix
-	}
-
-	b, err := base64.RawURLEncoding.DecodeString(token[len(auth.AccessTokenPrefix):])
-	if err != nil {
-		fmt.Printf("[error] failed to decode, err: %v\n", err)
-		return nil, nil, errInvalidAccessToken
-	}
-
-	var pbToken pbi.Token
-	err = proto.Unmarshal(b, &pbToken)
-	if err != nil {
-		fmt.Printf("[error] failed to unmarshal, err: %v\n", err)
-		return nil, nil, errInvalidAccessToken
-	}
-
-	jwk, err := db.RetrieveJwk(ctx, common.SysSpaceId, pbToken.GetKid())
-	if err != nil {
-		fmt.Printf("[error] failed to retrieve jwk, err: %v\n", err)
-		return nil, nil, errInvalidAccessToken
-	}
-
-	params := jwk.Params()
-	key, err := params.EcPublicKey()
-	if err != nil {
-		fmt.Printf("[error] failed to get ec public key, err: %v\n", err)
-		return nil, nil, ErrInternal
-	}
-
-	sig, err := kms.ParseEcSig(key.Curve, pbToken.GetSignature())
-	if err != nil {
-		fmt.Printf("[error] invalid signature, err: %v\n", err)
-		return nil, nil, errInvalidAccessToken
-	}
-
-	b, err = proto.Marshal(pbToken.GetClaims())
-	if err != nil {
-		fmt.Printf("[error] failed to marshal, err: %v\n", err)
-		return nil, nil, ErrInternal
-	}
-
-	b = append(b, pbToken.GetId()...)
-	digest := sha256.Sum256(b)
-	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
-		fmt.Println("[error] invalid signature")
-		return nil, nil, errInvalidAccessToken
-	}
-
-	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetId())
-	if err != nil {
-		if !errors.Is(err, db.ErrNotFound) {
-			fmt.Printf("[error] failed to retrieve idn, err: %v\n", err)
-		}
-
-		return nil, nil, errInvalidAccessToken
-	}
-
-	claims := pbToken.GetClaims()
-	if idn.Id() != claims.GetSub() {
-		fmt.Printf("[error] token subject mismatch (want: %v, have: %v)\n", claims.GetSub(), idn.Id())
-		return nil, nil, errInvalidAccessToken
-	}
-
-	return idn, &pb.Claims{
-		Aud: claims.Aud,
-		Iss: claims.Iss,
-	}, nil
-}
-
-func checkJwt(ctx context.Context, appId string, s string) (*db.Idn, *pb.Claims, error) {
+func checkJwt(ctx context.Context, appId string, s string) (*db.Idn, *jwt.Claims, error) {
 	log := zerolog.Ctx(ctx)
 	token, err := jwt.Validate(ctx, s, mkJwkFunc(appId))
 	if err != nil {
@@ -180,7 +111,7 @@ func checkJwt(ctx context.Context, appId string, s string) (*db.Idn, *pb.Claims,
 		return nil, nil, err
 	}
 
-	return idn, newTokenClaims(claims.Aud(), claims.Iss()), nil
+	return idn, claims, nil
 }
 
 func mapIdnToPb(idn *db.Idn) *pb.Idn {

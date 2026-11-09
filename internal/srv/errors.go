@@ -24,9 +24,7 @@ const (
 )
 
 var (
-	errInvalidAccessTokenPrefix = fmt.Errorf("invalid access token prefix")
-	errInvalidAccessToken       = fmt.Errorf("invalid access token")
-	errInvalidJwt               = fmt.Errorf("invalid jwt")
+	errInvalidJwt = fmt.Errorf("invalid jwt")
 )
 
 type errorCode codes.Code

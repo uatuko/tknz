@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"go.tknz.dev/internal/db"
+	"go.tknz.dev/internal/srv/auth"
 	"go.tknz.dev/pb"
 )
 
@@ -19,18 +20,18 @@ func (s *spaces) Create(ctx context.Context, req *pb.SpacesCreateRequest) (*pb.S
 		return nil, err
 	}
 
-	idn, _, err := checkAccessToken(ctx, token)
+	idn, _, err := auth.CheckAccessToken(ctx, token)
 	if err != nil {
-		if errors.Is(err, errInvalidAccessToken) {
+		if errors.Is(err, auth.ErrInvalidAccessToken) {
 			return nil, NewError(ErrPermissionDenied, err)
 		}
 
-		if errors.Is(err, errInvalidAccessTokenPrefix) {
+		if errors.Is(err, auth.ErrInvalidAccessTokenPrefix) {
 			// TODO: check for federated tokens
 			return nil, NewErrorf(ErrUnauthenticated, "invalid or unsupported credentials")
 		}
 
-		return nil, err
+		return nil, NewError(ErrInternal, err)
 	}
 
 	if idn.Status() < db.IdnStatusPending {
