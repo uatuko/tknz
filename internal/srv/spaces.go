@@ -19,7 +19,7 @@ func (s *spaces) Create(ctx context.Context, req *pb.SpacesCreateRequest) (*pb.S
 		return nil, err
 	}
 
-	idn, err := checkAccessToken(ctx, token)
+	idn, _, err := checkAccessToken(ctx, token)
 	if err != nil {
 		if errors.Is(err, errInvalidAccessToken) {
 			return nil, NewError(ErrPermissionDenied, err)

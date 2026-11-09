@@ -34,7 +34,7 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 	}
 
 	token := req.GetToken()
-	idn, err := checkAccessToken(ctx, token)
+	idn, claims, err := checkAccessToken(ctx, token)
 	if err != nil {
 		if errors.Is(err, errInvalidAccessToken) {
 			return resp, nil
@@ -47,7 +47,7 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 				return resp, nil
 			}
 
-			idn, err = checkJwt(ctx, appId, token)
+			idn, claims, err = checkJwt(ctx, appId, token)
 			if err != nil {
 				if errors.Is(err, errInvalidJwt) {
 					return resp, nil
@@ -62,6 +62,7 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 
 	resp.Ok = true
 	resp.Idn = mapIdnToPb(idn)
+	resp.Claims = claims
 
 	return resp, nil
 }
@@ -90,54 +91,54 @@ func accessTokenFromCtx(ctx context.Context) (string, error) {
 	return token, nil
 }
 
-func checkAccessToken(ctx context.Context, token string) (*db.Idn, error) {
+func checkAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, error) {
 	if !strings.HasPrefix(token, auth.AccessTokenPrefix) {
-		return nil, errInvalidAccessTokenPrefix
+		return nil, nil, errInvalidAccessTokenPrefix
 	}
 
 	b, err := base64.RawURLEncoding.DecodeString(token[len(auth.AccessTokenPrefix):])
 	if err != nil {
 		fmt.Printf("[error] failed to decode, err: %v\n", err)
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	var pbToken pbi.Token
 	err = proto.Unmarshal(b, &pbToken)
 	if err != nil {
 		fmt.Printf("[error] failed to unmarshal, err: %v\n", err)
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	jwk, err := db.RetrieveJwk(ctx, common.SysSpaceId, pbToken.GetKid())
 	if err != nil {
 		fmt.Printf("[error] failed to retrieve jwk, err: %v\n", err)
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	params := jwk.Params()
 	key, err := params.EcPublicKey()
 	if err != nil {
 		fmt.Printf("[error] failed to get ec public key, err: %v\n", err)
-		return nil, ErrInternal
+		return nil, nil, ErrInternal
 	}
 
 	sig, err := kms.ParseEcSig(key.Curve, pbToken.GetSignature())
 	if err != nil {
 		fmt.Printf("[error] invalid signature, err: %v\n", err)
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	b, err = proto.Marshal(pbToken.GetClaims())
 	if err != nil {
 		fmt.Printf("[error] failed to marshal, err: %v\n", err)
-		return nil, ErrInternal
+		return nil, nil, ErrInternal
 	}
 
 	b = append(b, pbToken.GetId()...)
 	digest := sha256.Sum256(b)
 	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
 		fmt.Println("[error] invalid signature")
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetId())
@@ -146,37 +147,40 @@ func checkAccessToken(ctx context.Context, token string) (*db.Idn, error) {
 			fmt.Printf("[error] failed to retrieve idn, err: %v\n", err)
 		}
 
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
 	claims := pbToken.GetClaims()
 	if idn.Id() != claims.GetSub() {
 		fmt.Printf("[error] token subject mismatch (want: %v, have: %v)\n", claims.GetSub(), idn.Id())
-		return nil, errInvalidAccessToken
+		return nil, nil, errInvalidAccessToken
 	}
 
-	return idn, nil
+	return idn, &pb.Claims{
+		Aud: claims.Aud,
+		Iss: claims.Iss,
+	}, nil
 }
 
-func checkJwt(ctx context.Context, appId string, s string) (*db.Idn, error) {
+func checkJwt(ctx context.Context, appId string, s string) (*db.Idn, *pb.Claims, error) {
 	log := zerolog.Ctx(ctx)
 	token, err := jwt.Validate(ctx, s, mkJwkFunc(appId))
 	if err != nil {
 		log.Debug().Err(err).Msg("failed to validate jwt")
-		return nil, errInvalidJwt
+		return nil, nil, errInvalidJwt
 	}
 
 	claims := token.Claims()
 	idn, err := db.RetrieveIdnByFederatedLogin(ctx, appId, claims.Sub(), claims.Iss(), claims.Aud())
 	if err != nil {
 		if errors.Is(err, db.ErrNotFound) {
-			return nil, errInvalidJwt
+			return nil, nil, errInvalidJwt
 		}
 
-		return nil, err
+		return nil, nil, err
 	}
 
-	return idn, nil
+	return idn, newTokenClaims(claims.Aud(), claims.Iss()), nil
 }
 
 func mapIdnToPb(idn *db.Idn) *pb.Idn {
@@ -228,4 +232,17 @@ func mkJwkFunc(appId string) jwt.JwkFunc {
 
 		return nil, fmt.Errorf("jwk not found, want: %s, have: %v", kid, have)
 	}
+}
+
+func newTokenClaims(aud string, iss string) *pb.Claims {
+	claims := &pb.Claims{}
+	if aud != "" {
+		claims.Aud = &aud
+	}
+
+	if iss != "" {
+		claims.Iss = &iss
+	}
+
+	return claims
 }
