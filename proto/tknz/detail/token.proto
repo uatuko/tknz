@@ -6,7 +6,6 @@ option go_package = "go.tknz.dev/internal/pb";
 
 message Claims {
 	repeated string aud = 1;
-	optional string iss = 2;
 	optional string sub = 3;
 }
 

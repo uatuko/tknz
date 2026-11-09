@@ -33,7 +33,6 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 		resp.Idn = mapIdnToPb(idn)
 		resp.Claims = &pb.Claims{
 			Aud: claims.Aud,
-			Iss: claims.Iss,
 		}
 
 		return resp, nil
@@ -66,11 +65,6 @@ func (a *authn) Check(ctx context.Context, req *pb.AuthnCheckRequest) (*pb.Authn
 	resp.Idn = mapIdnToPb(idn)
 	resp.Claims = &pb.Claims{
 		Aud: append([]string{}, jwtClaims.Aud()...),
-	}
-
-	if jwtClaims.Iss() != "" {
-		iss := jwtClaims.Iss()
-		resp.Claims.Iss = &iss
 	}
 
 	return resp, nil

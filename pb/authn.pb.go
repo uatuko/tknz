@@ -76,7 +76,6 @@ func (IdnStatus) EnumDescriptor() ([]byte, []int) {
 type Claims struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Aud           []string               `protobuf:"bytes,1,rep,name=aud,proto3" json:"aud,omitempty"`
-	Iss           *string                `protobuf:"bytes,2,opt,name=iss,proto3,oneof" json:"iss,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -116,13 +115,6 @@ func (x *Claims) GetAud() []string {
 		return x.Aud
 	}
 	return nil
-}
-
-func (x *Claims) GetIss() string {
-	if x != nil && x.Iss != nil {
-		return *x.Iss
-	}
-	return ""
 }
 
 type Idn struct {
@@ -338,11 +330,9 @@ var File_proto_tknz_v1_authn_proto protoreflect.FileDescriptor
 
 const file_proto_tknz_v1_authn_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/tknz/v1/authn.proto\x12\atknz.v1\"9\n" +
+	"\x19proto/tknz/v1/authn.proto\x12\atknz.v1\"\x1a\n" +
 	"\x06Claims\x12\x10\n" +
-	"\x03aud\x18\x01 \x03(\tR\x03aud\x12\x15\n" +
-	"\x03iss\x18\x02 \x01(\tH\x00R\x03iss\x88\x01\x01B\x06\n" +
-	"\x04_iss\"\xe4\x01\n" +
+	"\x03aud\x18\x01 \x03(\tR\x03aud\"\xe4\x01\n" +
 	"\x03Idn\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12*\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x12.tknz.v1.IdnStatusR\x06status\x12\x19\n" +
@@ -413,7 +403,6 @@ func file_proto_tknz_v1_authn_proto_init() {
 	if File_proto_tknz_v1_authn_proto != nil {
 		return
 	}
-	file_proto_tknz_v1_authn_proto_msgTypes[0].OneofWrappers = []any{}
 	file_proto_tknz_v1_authn_proto_msgTypes[1].OneofWrappers = []any{}
 	file_proto_tknz_v1_authn_proto_msgTypes[2].OneofWrappers = []any{}
 	file_proto_tknz_v1_authn_proto_msgTypes[3].OneofWrappers = []any{}

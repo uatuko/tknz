@@ -123,7 +123,6 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 
 	claims := pb.Claims{
 		Aud: []string{app.OAuthClientId()},
-		Iss: &attrs.ProviderId,
 		Sub: &attrs.Sub,
 	}
 	if app.Aud() != "" {
