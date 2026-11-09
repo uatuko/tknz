@@ -8,13 +8,14 @@ import (
 	"slices"
 	"time"
 
+	"google.golang.org/protobuf/proto"
+
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/jose/jwa"
 	"go.tknz.dev/internal/jose/jws"
 	"go.tknz.dev/internal/kms"
 	"go.tknz.dev/internal/pb"
 	"go.tknz.dev/internal/srv/common"
-	"google.golang.org/protobuf/proto"
 )
 
 type idTokenClaims struct {
