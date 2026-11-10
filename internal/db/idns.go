@@ -444,7 +444,7 @@ func RetrieveIdnByFederatedLogin(ctx context.Context, appId string, login string
 			i.app_id = $1::text
 			and i.login = $2::text
 			and f.iss = $3::text
-			and f.attrs->>'aud' = any($4::text[])
+			and f.attrs->'aud' ?| $4::text[]
 		;
 	`
 

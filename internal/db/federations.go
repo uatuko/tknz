@@ -25,7 +25,7 @@ func (f *Federation) Attrs() FederationAttrs {
 	return f.attrs
 }
 
-func (f *Federation) Aud() string {
+func (f *Federation) Aud() []string {
 	return f.attrs.Aud
 }
 
@@ -85,8 +85,8 @@ func (f *Federation) insert(ctx context.Context) error {
 }
 
 type FederationAttrs struct {
-	Aud     string `json:"aud,omitempty"`
-	JwksUri string `json:"jwks_uri,omitempty"`
+	Aud     []string `json:"aud,omitempty"`
+	JwksUri string   `json:"jwks_uri,omitempty"`
 
 	Rev int32 `json:"_rev,omitempty"`
 }
