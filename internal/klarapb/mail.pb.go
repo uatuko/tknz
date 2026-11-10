@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.8
 // 	protoc        v7.35.1
-// source: proto/klara/mx/v1/mail.proto
+// source: proto/klara/v1/mail.proto
 
 package klarapb
 
@@ -57,11 +57,11 @@ func (x MailStatus) String() string {
 }
 
 func (MailStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_klara_mx_v1_mail_proto_enumTypes[0].Descriptor()
+	return file_proto_klara_v1_mail_proto_enumTypes[0].Descriptor()
 }
 
 func (MailStatus) Type() protoreflect.EnumType {
-	return &file_proto_klara_mx_v1_mail_proto_enumTypes[0]
+	return &file_proto_klara_v1_mail_proto_enumTypes[0]
 }
 
 func (x MailStatus) Number() protoreflect.EnumNumber {
@@ -70,7 +70,7 @@ func (x MailStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MailStatus.Descriptor instead.
 func (MailStatus) EnumDescriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{0}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{0}
 }
 
 type MailType int32
@@ -106,11 +106,11 @@ func (x MailType) String() string {
 }
 
 func (MailType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_klara_mx_v1_mail_proto_enumTypes[1].Descriptor()
+	return file_proto_klara_v1_mail_proto_enumTypes[1].Descriptor()
 }
 
 func (MailType) Type() protoreflect.EnumType {
-	return &file_proto_klara_mx_v1_mail_proto_enumTypes[1]
+	return &file_proto_klara_v1_mail_proto_enumTypes[1]
 }
 
 func (x MailType) Number() protoreflect.EnumNumber {
@@ -119,7 +119,7 @@ func (x MailType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MailType.Descriptor instead.
 func (MailType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{1}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{1}
 }
 
 // Ref: https://www.rfc-editor.org/rfc/rfc2822#section-3.4
@@ -136,7 +136,7 @@ type Address struct {
 
 func (x *Address) Reset() {
 	*x = Address{}
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[0]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -148,7 +148,7 @@ func (x *Address) String() string {
 func (*Address) ProtoMessage() {}
 
 func (x *Address) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[0]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,7 +161,7 @@ func (x *Address) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Address.ProtoReflect.Descriptor instead.
 func (*Address) Descriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{0}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Address) GetEmail() string {
@@ -189,7 +189,7 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[1]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +201,7 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[1]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +214,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{1}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Message) GetType() string {
@@ -246,7 +246,7 @@ type MailSendRequest struct {
 
 func (x *MailSendRequest) Reset() {
 	*x = MailSendRequest{}
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[2]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +258,7 @@ func (x *MailSendRequest) String() string {
 func (*MailSendRequest) ProtoMessage() {}
 
 func (x *MailSendRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[2]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +271,7 @@ func (x *MailSendRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MailSendRequest.ProtoReflect.Descriptor instead.
 func (*MailSendRequest) Descriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{2}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *MailSendRequest) GetFrom() *Address {
@@ -324,7 +324,7 @@ type MailSendResponse struct {
 
 func (x *MailSendResponse) Reset() {
 	*x = MailSendResponse{}
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[3]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -336,7 +336,7 @@ func (x *MailSendResponse) String() string {
 func (*MailSendResponse) ProtoMessage() {}
 
 func (x *MailSendResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_klara_mx_v1_mail_proto_msgTypes[3]
+	mi := &file_proto_klara_v1_mail_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -349,27 +349,27 @@ func (x *MailSendResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MailSendResponse.ProtoReflect.Descriptor instead.
 func (*MailSendResponse) Descriptor() ([]byte, []int) {
-	return file_proto_klara_mx_v1_mail_proto_rawDescGZIP(), []int{3}
+	return file_proto_klara_v1_mail_proto_rawDescGZIP(), []int{3}
 }
 
-var File_proto_klara_mx_v1_mail_proto protoreflect.FileDescriptor
+var File_proto_klara_v1_mail_proto protoreflect.FileDescriptor
 
-const file_proto_klara_mx_v1_mail_proto_rawDesc = "" +
+const file_proto_klara_v1_mail_proto_rawDesc = "" +
 	"\n" +
-	"\x1cproto/klara/mx/v1/mail.proto\x12\vklara.mx.v1\"3\n" +
+	"\x19proto/klara/v1/mail.proto\x12\bklara.v1\"3\n" +
 	"\aAddress\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"1\n" +
 	"\aMessage\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x12\n" +
-	"\x04data\x18\x02 \x01(\tR\x04data\"\x87\x02\n" +
-	"\x0fMailSendRequest\x12-\n" +
-	"\x04from\x18\x01 \x01(\v2\x14.klara.mx.v1.AddressH\x00R\x04from\x88\x01\x01\x12$\n" +
-	"\x02to\x18\x02 \x03(\v2\x14.klara.mx.v1.AddressR\x02to\x12$\n" +
-	"\x02cc\x18\x03 \x03(\v2\x14.klara.mx.v1.AddressR\x02cc\x12&\n" +
-	"\x03bcc\x18\x04 \x03(\v2\x14.klara.mx.v1.AddressR\x03bcc\x12\x18\n" +
-	"\asubject\x18\x05 \x01(\tR\asubject\x12.\n" +
-	"\acontent\x18\x06 \x03(\v2\x14.klara.mx.v1.MessageR\acontentB\a\n" +
+	"\x04data\x18\x02 \x01(\tR\x04data\"\xf8\x01\n" +
+	"\x0fMailSendRequest\x12*\n" +
+	"\x04from\x18\x01 \x01(\v2\x11.klara.v1.AddressH\x00R\x04from\x88\x01\x01\x12!\n" +
+	"\x02to\x18\x02 \x03(\v2\x11.klara.v1.AddressR\x02to\x12!\n" +
+	"\x02cc\x18\x03 \x03(\v2\x11.klara.v1.AddressR\x02cc\x12#\n" +
+	"\x03bcc\x18\x04 \x03(\v2\x11.klara.v1.AddressR\x03bcc\x12\x18\n" +
+	"\asubject\x18\x05 \x01(\tR\asubject\x12+\n" +
+	"\acontent\x18\x06 \x03(\v2\x11.klara.v1.MessageR\acontentB\a\n" +
 	"\x05_from\"\x12\n" +
 	"\x10MailSendResponse*[\n" +
 	"\n" +
@@ -382,40 +382,40 @@ const file_proto_klara_mx_v1_mail_proto_rawDesc = "" +
 	"\bMailType\x12\x15\n" +
 	"\x11mail_type_unknown\x10\x00\x12\x15\n" +
 	"\x11mail_type_inbound\x10\x01\x12\x16\n" +
-	"\x12mail_type_outbound\x10\x022K\n" +
-	"\x04Mail\x12C\n" +
-	"\x04Send\x12\x1c.klara.mx.v1.MailSendRequest\x1a\x1d.klara.mx.v1.MailSendResponseB&Z$go.tknz.dev/internal/klarapb;klarapbb\x06proto3"
+	"\x12mail_type_outbound\x10\x022E\n" +
+	"\x04Mail\x12=\n" +
+	"\x04Send\x12\x19.klara.v1.MailSendRequest\x1a\x1a.klara.v1.MailSendResponseB&Z$go.tknz.dev/internal/klarapb;klarapbb\x06proto3"
 
 var (
-	file_proto_klara_mx_v1_mail_proto_rawDescOnce sync.Once
-	file_proto_klara_mx_v1_mail_proto_rawDescData []byte
+	file_proto_klara_v1_mail_proto_rawDescOnce sync.Once
+	file_proto_klara_v1_mail_proto_rawDescData []byte
 )
 
-func file_proto_klara_mx_v1_mail_proto_rawDescGZIP() []byte {
-	file_proto_klara_mx_v1_mail_proto_rawDescOnce.Do(func() {
-		file_proto_klara_mx_v1_mail_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_klara_mx_v1_mail_proto_rawDesc), len(file_proto_klara_mx_v1_mail_proto_rawDesc)))
+func file_proto_klara_v1_mail_proto_rawDescGZIP() []byte {
+	file_proto_klara_v1_mail_proto_rawDescOnce.Do(func() {
+		file_proto_klara_v1_mail_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_klara_v1_mail_proto_rawDesc), len(file_proto_klara_v1_mail_proto_rawDesc)))
 	})
-	return file_proto_klara_mx_v1_mail_proto_rawDescData
+	return file_proto_klara_v1_mail_proto_rawDescData
 }
 
-var file_proto_klara_mx_v1_mail_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_klara_mx_v1_mail_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_proto_klara_mx_v1_mail_proto_goTypes = []any{
-	(MailStatus)(0),          // 0: klara.mx.v1.MailStatus
-	(MailType)(0),            // 1: klara.mx.v1.MailType
-	(*Address)(nil),          // 2: klara.mx.v1.Address
-	(*Message)(nil),          // 3: klara.mx.v1.Message
-	(*MailSendRequest)(nil),  // 4: klara.mx.v1.MailSendRequest
-	(*MailSendResponse)(nil), // 5: klara.mx.v1.MailSendResponse
+var file_proto_klara_v1_mail_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_proto_klara_v1_mail_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_klara_v1_mail_proto_goTypes = []any{
+	(MailStatus)(0),          // 0: klara.v1.MailStatus
+	(MailType)(0),            // 1: klara.v1.MailType
+	(*Address)(nil),          // 2: klara.v1.Address
+	(*Message)(nil),          // 3: klara.v1.Message
+	(*MailSendRequest)(nil),  // 4: klara.v1.MailSendRequest
+	(*MailSendResponse)(nil), // 5: klara.v1.MailSendResponse
 }
-var file_proto_klara_mx_v1_mail_proto_depIdxs = []int32{
-	2, // 0: klara.mx.v1.MailSendRequest.from:type_name -> klara.mx.v1.Address
-	2, // 1: klara.mx.v1.MailSendRequest.to:type_name -> klara.mx.v1.Address
-	2, // 2: klara.mx.v1.MailSendRequest.cc:type_name -> klara.mx.v1.Address
-	2, // 3: klara.mx.v1.MailSendRequest.bcc:type_name -> klara.mx.v1.Address
-	3, // 4: klara.mx.v1.MailSendRequest.content:type_name -> klara.mx.v1.Message
-	4, // 5: klara.mx.v1.Mail.Send:input_type -> klara.mx.v1.MailSendRequest
-	5, // 6: klara.mx.v1.Mail.Send:output_type -> klara.mx.v1.MailSendResponse
+var file_proto_klara_v1_mail_proto_depIdxs = []int32{
+	2, // 0: klara.v1.MailSendRequest.from:type_name -> klara.v1.Address
+	2, // 1: klara.v1.MailSendRequest.to:type_name -> klara.v1.Address
+	2, // 2: klara.v1.MailSendRequest.cc:type_name -> klara.v1.Address
+	2, // 3: klara.v1.MailSendRequest.bcc:type_name -> klara.v1.Address
+	3, // 4: klara.v1.MailSendRequest.content:type_name -> klara.v1.Message
+	4, // 5: klara.v1.Mail.Send:input_type -> klara.v1.MailSendRequest
+	5, // 6: klara.v1.Mail.Send:output_type -> klara.v1.MailSendResponse
 	6, // [6:7] is the sub-list for method output_type
 	5, // [5:6] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
@@ -423,28 +423,28 @@ var file_proto_klara_mx_v1_mail_proto_depIdxs = []int32{
 	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_proto_klara_mx_v1_mail_proto_init() }
-func file_proto_klara_mx_v1_mail_proto_init() {
-	if File_proto_klara_mx_v1_mail_proto != nil {
+func init() { file_proto_klara_v1_mail_proto_init() }
+func file_proto_klara_v1_mail_proto_init() {
+	if File_proto_klara_v1_mail_proto != nil {
 		return
 	}
-	file_proto_klara_mx_v1_mail_proto_msgTypes[2].OneofWrappers = []any{}
+	file_proto_klara_v1_mail_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_klara_mx_v1_mail_proto_rawDesc), len(file_proto_klara_mx_v1_mail_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_klara_v1_mail_proto_rawDesc), len(file_proto_klara_v1_mail_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_klara_mx_v1_mail_proto_goTypes,
-		DependencyIndexes: file_proto_klara_mx_v1_mail_proto_depIdxs,
-		EnumInfos:         file_proto_klara_mx_v1_mail_proto_enumTypes,
-		MessageInfos:      file_proto_klara_mx_v1_mail_proto_msgTypes,
+		GoTypes:           file_proto_klara_v1_mail_proto_goTypes,
+		DependencyIndexes: file_proto_klara_v1_mail_proto_depIdxs,
+		EnumInfos:         file_proto_klara_v1_mail_proto_enumTypes,
+		MessageInfos:      file_proto_klara_v1_mail_proto_msgTypes,
 	}.Build()
-	File_proto_klara_mx_v1_mail_proto = out.File
-	file_proto_klara_mx_v1_mail_proto_goTypes = nil
-	file_proto_klara_mx_v1_mail_proto_depIdxs = nil
+	File_proto_klara_v1_mail_proto = out.File
+	file_proto_klara_v1_mail_proto_goTypes = nil
+	file_proto_klara_v1_mail_proto_depIdxs = nil
 }

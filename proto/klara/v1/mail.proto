@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package klara.mx.v1;
+package klara.v1;
 
 option go_package = "go.tknz.dev/internal/klarapb;klarapb";
 
