@@ -2,11 +2,17 @@ package auth
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"slices"
+	"strings"
 	"time"
+
+	"google.golang.org/protobuf/proto"
 
 	"go.tknz.dev/internal/db"
 	"go.tknz.dev/internal/jose/jwa"
@@ -14,25 +20,98 @@ import (
 	"go.tknz.dev/internal/kms"
 	"go.tknz.dev/internal/pb"
 	"go.tknz.dev/internal/srv/common"
-	"google.golang.org/protobuf/proto"
 )
 
 type idTokenClaims struct {
-	Aud   string `json:"aud,omitempty"`
-	Exp   int64  `json:"exp,omitempty"`
-	Iat   int64  `json:"iat,omitempty"`
-	Iss   string `json:"iss,omitempty"`
-	Nonce string `json:"nonce,omitempty"`
-	Sub   string `json:"sub,omitempty"`
+	Aud   []string `json:"aud,omitempty"`
+	Exp   int64    `json:"exp,omitempty"`
+	Iat   int64    `json:"iat,omitempty"`
+	Iss   string   `json:"iss,omitempty"`
+	Nonce string   `json:"nonce,omitempty"`
+	Sub   string   `json:"sub,omitempty"`
+}
+
+// CheckAccessToken validates an access token issued by NewAccessToken and returns the identity and claims
+// associated with it.
+//
+// Returns ErrInvalidAccessTokenPrefix if the token isn't an access token, ErrInvalidAccessToken if the
+// token is invalid, or any other error for internal failures.
+func CheckAccessToken(ctx context.Context, token string) (*db.Idn, *pb.Claims, error) {
+	if !strings.HasPrefix(token, AccessTokenPrefix) {
+		return nil, nil, ErrInvalidTokenPrefix
+	}
+
+	b, err := base64.RawURLEncoding.DecodeString(token[len(AccessTokenPrefix):])
+	if err != nil {
+		fmt.Printf("[error] failed to decode, err: %v\n", err)
+		return nil, nil, ErrInvalidToken
+	}
+
+	var pbToken pb.Token
+	err = proto.Unmarshal(b, &pbToken)
+	if err != nil {
+		fmt.Printf("[error] failed to unmarshal, err: %v\n", err)
+		return nil, nil, ErrInvalidToken
+	}
+
+	jwk, err := db.RetrieveJwk(ctx, common.SysSpaceId, pbToken.GetKid())
+	if err != nil {
+		fmt.Printf("[error] failed to retrieve jwk, err: %v\n", err)
+		return nil, nil, ErrInvalidToken
+	}
+
+	params := jwk.Params()
+	key, err := params.EcPublicKey()
+	if err != nil {
+		fmt.Printf("[error] failed to retrieve ec public key, err: %v\n", err)
+		return nil, nil, ErrServerError
+	}
+
+	sig, err := kms.ParseEcSig(key.Curve, pbToken.GetSignature())
+	if err != nil {
+		fmt.Printf("[error] invalid signature, err: %v\n", err)
+		return nil, nil, ErrInvalidToken
+	}
+
+	b, err = proto.Marshal(pbToken.GetClaims())
+	if err != nil {
+		fmt.Printf("[error] failed to marshal claims, err: %v\n", err)
+		return nil, nil, ErrServerError
+	}
+
+	b = append(b, pbToken.GetId()...)
+	digest := sha256.Sum256(b)
+	if !ecdsa.Verify(key, digest[:], sig.R, sig.S) {
+		fmt.Println("[error] invalid signature")
+		return nil, nil, ErrInvalidToken
+	}
+
+	idn, err := db.RetrieveIdnByAuthToken(ctx, pbToken.GetId())
+	if err != nil {
+		if !errors.Is(err, db.ErrNotFound) {
+			fmt.Printf("[error] failed to retrieve idn, err: %v\n", err)
+		}
+
+		return nil, nil, ErrInvalidToken
+	}
+
+	claims := pbToken.GetClaims()
+	if idn.Id() != claims.GetSub() {
+		fmt.Printf("[error] token subject mismatch (want: %v, have: %v)\n", claims.GetSub(), idn.Id())
+		return nil, nil, ErrInvalidToken
+	}
+
+	return idn, claims, nil
 }
 
 func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string, error) {
-	token, err := db.NewAuthToken(ctx, accessTokenTtl, db.AuthTokenAttrs{
+	attrs := db.AuthTokenAttrs{
 		AppId:      app.Id(),
-		ProviderId: code.Attrs().ProviderId,
-		Aud:        app.Attrs().Aud,
-		Sub:        code.Attrs().Sub,
-	})
+		ProviderId: code.ProviderId(),
+		Aud:        app.Aud(),
+		Sub:        code.Sub(),
+	}
+	token, err := db.NewAuthToken(ctx, accessTokenTtl, attrs)
 	if err != nil {
 		return "", err
 	}
@@ -42,19 +121,33 @@ func NewAccessToken(ctx context.Context, app *db.App, code *db.AuthCode) (string
 		return "", err
 	}
 
-	tokenBytes := token.Token()
-	sig, err := key.Sign(ctx, tokenBytes)
+	claims := pb.Claims{
+		Aud: []string{app.OAuthClientId()},
+		Sub: &attrs.Sub,
+	}
+	if app.Aud() != "" {
+		claims.Aud = append(claims.Aud, app.Aud())
+	}
+
+	b, err := proto.Marshal(&claims)
+	if err != nil {
+		return "", err
+	}
+
+	b = append(b, token.Id()...)
+	sig, err := key.Sign(ctx, b)
 	if err != nil {
 		return "", err
 	}
 
 	pbToken := pb.Token{
+		Claims:    &claims,
+		Id:        token.Id(),
 		Kid:       key.Kid(),
-		Token:     tokenBytes,
 		Signature: sig,
 	}
 
-	b, err := proto.Marshal(&pbToken)
+	b, err = proto.Marshal(&pbToken)
 	if err != nil {
 		return "", err
 	}
@@ -70,10 +163,10 @@ func NewIdToken(ctx context.Context, code *db.AuthCode) (string, error) {
 
 	now := time.Now().UTC()
 	payload := jwsEncode(idTokenClaims{
-		Aud: code.Attrs().ClientId,
+		Aud: []string{code.ClientId()},
 		Exp: now.Add(idTokenTtl).Unix(),
 		Iat: now.Unix(),
-		Sub: code.Attrs().Sub,
+		Sub: code.Sub(),
 	})
 
 	return jwsSign(ctx, &header, payload)

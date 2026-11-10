@@ -17,6 +17,6 @@ func TestAuthTokenNew(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, attrs, token.Attrs())
 	require.LessOrEqual(t, now.Add(ttl), token.Exp())
-	require.Len(t, token.Token(), 20)
+	require.Len(t, token.Id(), 20)
 	require.True(t, strings.HasPrefix(token.id, authTokenPrefix))
 }

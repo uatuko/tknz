@@ -14,6 +14,8 @@ const (
 	ErrInvalidCredentials     errorCode = "invalid_credentials"
 	ErrInvalidLogin           errorCode = "invalid_login"
 	ErrInvalidRequest         errorCode = "invalid_request"
+	ErrInvalidToken           errorCode = "invalid_token"
+	ErrInvalidTokenPrefix     errorCode = "invalid_token_prefix"
 	ErrMethodNotAllowed       errorCode = "method_not_allowed"
 	ErrNotFound               errorCode = "not_found"
 	ErrServerError            errorCode = "server_error"
@@ -38,11 +40,11 @@ type Error struct {
 	statusCode int
 }
 
-func (e Error) Error() string {
+func (e *Error) Error() string {
 	return e.ErrorCode.String()
 }
 
-func (e Error) StatusCode() int {
+func (e *Error) StatusCode() int {
 	return e.statusCode
 }
 
@@ -65,6 +67,10 @@ func NewError(code errorCode) *Error {
 	case ErrInvalidRequest:
 		e.statusCode = http.StatusBadRequest
 		e.ErrorDescription = "Invalid or malformed request."
+
+	case ErrInvalidToken, ErrInvalidTokenPrefix:
+		e.statusCode = http.StatusForbidden
+		e.ErrorDescription = "Invalid or malformed token."
 
 	case ErrMethodNotAllowed:
 		e.statusCode = http.StatusMethodNotAllowed

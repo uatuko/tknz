@@ -18,12 +18,16 @@ type App struct {
 	spaceId  string
 }
 
-func (app *App) Attrs() AppAttrs {
-	return app.attrs
+func (app *App) Aud() string {
+	return app.attrs.Aud
 }
 
 func (app *App) Id() string {
 	return app.id
+}
+
+func (app *App) Keys() []JwkParams {
+	return app.attrs.Keys
 }
 
 func (app *App) OAuthClientId() string {

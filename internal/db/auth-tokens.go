@@ -18,7 +18,7 @@ func (t *AuthToken) Attrs() AuthTokenAttrs {
 	return t.attrs.(AuthTokenAttrs)
 }
 
-func (t *AuthToken) Token() []byte {
+func (t *AuthToken) Id() []byte {
 	str := strings.TrimPrefix(t.id, authTokenPrefix)
 	b, err := encoding.DecodeString(str)
 	if err != nil {

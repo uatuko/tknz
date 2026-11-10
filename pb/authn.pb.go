@@ -73,6 +73,50 @@ func (IdnStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{0}
 }
 
+type Claims struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Aud           []string               `protobuf:"bytes,1,rep,name=aud,proto3" json:"aud,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Claims) Reset() {
+	*x = Claims{}
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Claims) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Claims) ProtoMessage() {}
+
+func (x *Claims) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Claims.ProtoReflect.Descriptor instead.
+func (*Claims) Descriptor() ([]byte, []int) {
+	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Claims) GetAud() []string {
+	if x != nil {
+		return x.Aud
+	}
+	return nil
+}
+
 type Idn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -88,7 +132,7 @@ type Idn struct {
 
 func (x *Idn) Reset() {
 	*x = Idn{}
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[0]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -100,7 +144,7 @@ func (x *Idn) String() string {
 func (*Idn) ProtoMessage() {}
 
 func (x *Idn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[0]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +157,7 @@ func (x *Idn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Idn.ProtoReflect.Descriptor instead.
 func (*Idn) Descriptor() ([]byte, []int) {
-	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{0}
+	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Idn) GetId() string {
@@ -167,7 +211,7 @@ func (x *Idn) GetPicture() string {
 
 type AuthnCheckRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Access token to validate
+	// Token to validate
 	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
 	// App ID, required if validating federated identity tokens
 	AppId         *string `protobuf:"bytes,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
@@ -177,7 +221,7 @@ type AuthnCheckRequest struct {
 
 func (x *AuthnCheckRequest) Reset() {
 	*x = AuthnCheckRequest{}
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[1]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -189,7 +233,7 @@ func (x *AuthnCheckRequest) String() string {
 func (*AuthnCheckRequest) ProtoMessage() {}
 
 func (x *AuthnCheckRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[1]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -202,7 +246,7 @@ func (x *AuthnCheckRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthnCheckRequest.ProtoReflect.Descriptor instead.
 func (*AuthnCheckRequest) Descriptor() ([]byte, []int) {
-	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{1}
+	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AuthnCheckRequest) GetToken() string {
@@ -224,14 +268,16 @@ type AuthnCheckResponse struct {
 	// Indicates whether the check was successful or not
 	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
 	// Identity information if the check was successful
-	Idn           *Idn `protobuf:"bytes,2,opt,name=idn,proto3,oneof" json:"idn,omitempty"`
+	Idn *Idn `protobuf:"bytes,2,opt,name=idn,proto3,oneof" json:"idn,omitempty"`
+	// Token claims
+	Claims        *Claims `protobuf:"bytes,3,opt,name=claims,proto3,oneof" json:"claims,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AuthnCheckResponse) Reset() {
 	*x = AuthnCheckResponse{}
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[2]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -243,7 +289,7 @@ func (x *AuthnCheckResponse) String() string {
 func (*AuthnCheckResponse) ProtoMessage() {}
 
 func (x *AuthnCheckResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_tknz_v1_authn_proto_msgTypes[2]
+	mi := &file_proto_tknz_v1_authn_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -256,7 +302,7 @@ func (x *AuthnCheckResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthnCheckResponse.ProtoReflect.Descriptor instead.
 func (*AuthnCheckResponse) Descriptor() ([]byte, []int) {
-	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{2}
+	return file_proto_tknz_v1_authn_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AuthnCheckResponse) GetOk() bool {
@@ -273,11 +319,20 @@ func (x *AuthnCheckResponse) GetIdn() *Idn {
 	return nil
 }
 
+func (x *AuthnCheckResponse) GetClaims() *Claims {
+	if x != nil {
+		return x.Claims
+	}
+	return nil
+}
+
 var File_proto_tknz_v1_authn_proto protoreflect.FileDescriptor
 
 const file_proto_tknz_v1_authn_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/tknz/v1/authn.proto\x12\atknz.v1\"\xe4\x01\n" +
+	"\x19proto/tknz/v1/authn.proto\x12\atknz.v1\"\x1a\n" +
+	"\x06Claims\x12\x10\n" +
+	"\x03aud\x18\x01 \x03(\tR\x03aud\"\xe4\x01\n" +
 	"\x03Idn\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12*\n" +
 	"\x06status\x18\x02 \x01(\x0e2\x12.tknz.v1.IdnStatusR\x06status\x12\x19\n" +
@@ -293,11 +348,13 @@ const file_proto_tknz_v1_authn_proto_rawDesc = "" +
 	"\x11AuthnCheckRequest\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x1a\n" +
 	"\x06app_id\x18\x02 \x01(\tH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"Q\n" +
+	"\a_app_id\"\x8a\x01\n" +
 	"\x12AuthnCheckResponse\x12\x0e\n" +
 	"\x02ok\x18\x01 \x01(\bR\x02ok\x12#\n" +
-	"\x03idn\x18\x02 \x01(\v2\f.tknz.v1.IdnH\x00R\x03idn\x88\x01\x01B\x06\n" +
-	"\x04_idn*b\n" +
+	"\x03idn\x18\x02 \x01(\v2\f.tknz.v1.IdnH\x00R\x03idn\x88\x01\x01\x12,\n" +
+	"\x06claims\x18\x03 \x01(\v2\x0f.tknz.v1.ClaimsH\x01R\x06claims\x88\x01\x01B\x06\n" +
+	"\x04_idnB\t\n" +
+	"\a_claims*b\n" +
 	"\tIdnStatus\x12\x0f\n" +
 	"\vidn_pending\x10\x00\x12\x0e\n" +
 	"\n" +
@@ -320,23 +377,25 @@ func file_proto_tknz_v1_authn_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_tknz_v1_authn_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_tknz_v1_authn_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_proto_tknz_v1_authn_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_tknz_v1_authn_proto_goTypes = []any{
 	(IdnStatus)(0),             // 0: tknz.v1.IdnStatus
-	(*Idn)(nil),                // 1: tknz.v1.Idn
-	(*AuthnCheckRequest)(nil),  // 2: tknz.v1.AuthnCheckRequest
-	(*AuthnCheckResponse)(nil), // 3: tknz.v1.AuthnCheckResponse
+	(*Claims)(nil),             // 1: tknz.v1.Claims
+	(*Idn)(nil),                // 2: tknz.v1.Idn
+	(*AuthnCheckRequest)(nil),  // 3: tknz.v1.AuthnCheckRequest
+	(*AuthnCheckResponse)(nil), // 4: tknz.v1.AuthnCheckResponse
 }
 var file_proto_tknz_v1_authn_proto_depIdxs = []int32{
 	0, // 0: tknz.v1.Idn.status:type_name -> tknz.v1.IdnStatus
-	1, // 1: tknz.v1.AuthnCheckResponse.idn:type_name -> tknz.v1.Idn
-	2, // 2: tknz.v1.Authn.Check:input_type -> tknz.v1.AuthnCheckRequest
-	3, // 3: tknz.v1.Authn.Check:output_type -> tknz.v1.AuthnCheckResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	2, // 1: tknz.v1.AuthnCheckResponse.idn:type_name -> tknz.v1.Idn
+	1, // 2: tknz.v1.AuthnCheckResponse.claims:type_name -> tknz.v1.Claims
+	3, // 3: tknz.v1.Authn.Check:input_type -> tknz.v1.AuthnCheckRequest
+	4, // 4: tknz.v1.Authn.Check:output_type -> tknz.v1.AuthnCheckResponse
+	4, // [4:5] is the sub-list for method output_type
+	3, // [3:4] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_tknz_v1_authn_proto_init() }
@@ -344,16 +403,16 @@ func file_proto_tknz_v1_authn_proto_init() {
 	if File_proto_tknz_v1_authn_proto != nil {
 		return
 	}
-	file_proto_tknz_v1_authn_proto_msgTypes[0].OneofWrappers = []any{}
 	file_proto_tknz_v1_authn_proto_msgTypes[1].OneofWrappers = []any{}
 	file_proto_tknz_v1_authn_proto_msgTypes[2].OneofWrappers = []any{}
+	file_proto_tknz_v1_authn_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_tknz_v1_authn_proto_rawDesc), len(file_proto_tknz_v1_authn_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

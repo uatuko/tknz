@@ -116,7 +116,7 @@ func TestAppNew(t *testing.T) {
 	require.Equal(t, app.SpaceId(), spaceId)
 	require.Equal(t, app.OAuthClientId(), clientId)
 	require.Equal(t, app.Rev(), attrs.Rev)
-	require.Equal(t, app.Attrs(), attrs)
+	require.Equal(t, app.attrs, attrs)
 }
 
 func TestAppRetrieveByOAuthClientId(t *testing.T) {
@@ -154,7 +154,7 @@ func TestAppRetrieveByOAuthClientId(t *testing.T) {
 		require.Equal(t, space.Id(), app.SpaceId())
 		require.Equal(t, clientId, app.OAuthClientId())
 		require.Equal(t, attrs.Rev, app.Rev())
-		require.Equal(t, attrs, app.Attrs())
+		require.Equal(t, attrs, app.attrs)
 	})
 
 	t.Run("not found", func(t *testing.T) {

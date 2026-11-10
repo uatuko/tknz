@@ -42,7 +42,7 @@ func TouchApp(t *testing.T) *App {
 	}
 
 	for _, a := range apps {
-		if a.Attrs().Aud == aud {
+		if a.Aud() == aud {
 			app = &a
 			break
 		}

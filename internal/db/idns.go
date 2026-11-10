@@ -427,7 +427,7 @@ func NewIdnSrcWithCr(ctx context.Context, idnId string, providerId string, sub s
 	return src, nil
 }
 
-func RetrieveIdnByFederatedLogin(ctx context.Context, appId string, login string, iss string, aud string) (*Idn, error) {
+func RetrieveIdnByFederatedLogin(ctx context.Context, appId string, login string, iss string, aud []string) (*Idn, error) {
 	// Note: we need to ensure the query uses unique indexes on both tables
 	//   - idns (app_id, login)
 	//   - federations (app_id, iss)
@@ -444,7 +444,7 @@ func RetrieveIdnByFederatedLogin(ctx context.Context, appId string, login string
 			i.app_id = $1::text
 			and i.login = $2::text
 			and f.iss = $3::text
-			and f.attrs->>'aud' = $4::text
+			and f.attrs->>'aud' = any($4::text[])
 		;
 	`
 

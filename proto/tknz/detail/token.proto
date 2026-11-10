@@ -4,9 +4,17 @@ package tknz.detail;
 
 option go_package = "go.tknz.dev/internal/pb";
 
+message Claims {
+	repeated string aud = 1;
+	optional string sub = 3;
+}
+
 message Token {
-	// Token
-	bytes token = 1;
+	// Token id
+	bytes id = 1;
+
+	// Token claims
+	Claims claims = 4;
 
 	// Token signature
 	bytes signature = 2;

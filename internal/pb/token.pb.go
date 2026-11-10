@@ -21,10 +21,64 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Claims struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Aud           []string               `protobuf:"bytes,1,rep,name=aud,proto3" json:"aud,omitempty"`
+	Sub           *string                `protobuf:"bytes,3,opt,name=sub,proto3,oneof" json:"sub,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Claims) Reset() {
+	*x = Claims{}
+	mi := &file_proto_tknz_detail_token_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Claims) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Claims) ProtoMessage() {}
+
+func (x *Claims) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tknz_detail_token_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Claims.ProtoReflect.Descriptor instead.
+func (*Claims) Descriptor() ([]byte, []int) {
+	return file_proto_tknz_detail_token_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Claims) GetAud() []string {
+	if x != nil {
+		return x.Aud
+	}
+	return nil
+}
+
+func (x *Claims) GetSub() string {
+	if x != nil && x.Sub != nil {
+		return *x.Sub
+	}
+	return ""
+}
+
 type Token struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Token
-	Token []byte `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// Token id
+	Id []byte `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Token claims
+	Claims *Claims `protobuf:"bytes,4,opt,name=claims,proto3" json:"claims,omitempty"`
 	// Token signature
 	Signature []byte `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
 	// Key id used for the token signature
@@ -35,7 +89,7 @@ type Token struct {
 
 func (x *Token) Reset() {
 	*x = Token{}
-	mi := &file_proto_tknz_detail_token_proto_msgTypes[0]
+	mi := &file_proto_tknz_detail_token_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +101,7 @@ func (x *Token) String() string {
 func (*Token) ProtoMessage() {}
 
 func (x *Token) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_tknz_detail_token_proto_msgTypes[0]
+	mi := &file_proto_tknz_detail_token_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,12 +114,19 @@ func (x *Token) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Token.ProtoReflect.Descriptor instead.
 func (*Token) Descriptor() ([]byte, []int) {
-	return file_proto_tknz_detail_token_proto_rawDescGZIP(), []int{0}
+	return file_proto_tknz_detail_token_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Token) GetToken() []byte {
+func (x *Token) GetId() []byte {
 	if x != nil {
-		return x.Token
+		return x.Id
+	}
+	return nil
+}
+
+func (x *Token) GetClaims() *Claims {
+	if x != nil {
+		return x.Claims
 	}
 	return nil
 }
@@ -88,9 +149,14 @@ var File_proto_tknz_detail_token_proto protoreflect.FileDescriptor
 
 const file_proto_tknz_detail_token_proto_rawDesc = "" +
 	"\n" +
-	"\x1dproto/tknz/detail/token.proto\x12\vtknz.detail\"M\n" +
-	"\x05Token\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\fR\x05token\x12\x1c\n" +
+	"\x1dproto/tknz/detail/token.proto\x12\vtknz.detail\"9\n" +
+	"\x06Claims\x12\x10\n" +
+	"\x03aud\x18\x01 \x03(\tR\x03aud\x12\x15\n" +
+	"\x03sub\x18\x03 \x01(\tH\x00R\x03sub\x88\x01\x01B\x06\n" +
+	"\x04_sub\"t\n" +
+	"\x05Token\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\fR\x02id\x12+\n" +
+	"\x06claims\x18\x04 \x01(\v2\x13.tknz.detail.ClaimsR\x06claims\x12\x1c\n" +
 	"\tsignature\x18\x02 \x01(\fR\tsignature\x12\x10\n" +
 	"\x03kid\x18\x03 \x01(\tR\x03kidB\x19Z\x17go.tknz.dev/internal/pbb\x06proto3"
 
@@ -106,16 +172,18 @@ func file_proto_tknz_detail_token_proto_rawDescGZIP() []byte {
 	return file_proto_tknz_detail_token_proto_rawDescData
 }
 
-var file_proto_tknz_detail_token_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_proto_tknz_detail_token_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_tknz_detail_token_proto_goTypes = []any{
-	(*Token)(nil), // 0: tknz.detail.Token
+	(*Claims)(nil), // 0: tknz.detail.Claims
+	(*Token)(nil),  // 1: tknz.detail.Token
 }
 var file_proto_tknz_detail_token_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: tknz.detail.Token.claims:type_name -> tknz.detail.Claims
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_proto_tknz_detail_token_proto_init() }
@@ -123,13 +191,14 @@ func file_proto_tknz_detail_token_proto_init() {
 	if File_proto_tknz_detail_token_proto != nil {
 		return
 	}
+	file_proto_tknz_detail_token_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_tknz_detail_token_proto_rawDesc), len(file_proto_tknz_detail_token_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

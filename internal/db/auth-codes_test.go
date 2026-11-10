@@ -19,7 +19,7 @@ func TestAuthCodeNew(t *testing.T) {
 
 	code, err := NewAuthCode(t.Context(), ttl, attrs)
 	require.NoError(t, err)
-	require.Equal(t, attrs, code.Attrs())
+	require.Equal(t, attrs, code.attrs)
 	require.LessOrEqual(t, now.Add(ttl), code.Exp())
 	require.NotEmpty(t, code.Id())
 	require.True(t, strings.HasPrefix(code.id, authCodePrefix))
@@ -53,5 +53,5 @@ func TestAuthCodeRetrieve(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, id, authCodePrefix+code.Id())
 	require.Equal(t, exp, code.Exp())
-	require.Equal(t, attrs, code.Attrs())
+	require.Equal(t, attrs, code.attrs)
 }

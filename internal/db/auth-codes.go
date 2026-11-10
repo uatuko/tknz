@@ -15,12 +15,20 @@ type AuthCode struct {
 	token
 }
 
-func (c *AuthCode) Attrs() AuthCodeAttrs {
-	return c.attrs.(AuthCodeAttrs)
+func (c *AuthCode) ClientId() string {
+	return c.attrs.(AuthCodeAttrs).ClientId
 }
 
 func (c *AuthCode) Id() string {
 	return strings.TrimPrefix(c.id, authCodePrefix)
+}
+
+func (c *AuthCode) ProviderId() string {
+	return c.attrs.(AuthCodeAttrs).ProviderId
+}
+
+func (c *AuthCode) Sub() string {
+	return c.attrs.(AuthCodeAttrs).Sub
 }
 
 type AuthCodeAttrs struct {

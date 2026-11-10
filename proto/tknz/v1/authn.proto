@@ -15,6 +15,10 @@ enum IdnStatus {
 	idn_deleted   = -2;
 }
 
+message Claims {
+	repeated string aud = 1;
+}
+
 message Idn {
 	string    id       = 1;
 	IdnStatus status   = 2;
@@ -27,7 +31,7 @@ message Idn {
 }
 
 message AuthnCheckRequest {
-	// Access token to validate
+	// Token to validate
 	string token = 1;
 
 	// App ID, required if validating federated identity tokens
@@ -40,4 +44,7 @@ message AuthnCheckResponse {
 
 	// Identity information if the check was successful
 	optional Idn idn = 2;
+
+	// Token claims
+	optional Claims claims = 3;
 }
