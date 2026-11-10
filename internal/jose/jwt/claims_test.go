@@ -8,6 +8,27 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestAudienceMarshalJSON(t *testing.T) {
+	tests := []struct {
+		name string
+		in   registeredClaims
+		want string
+	}{
+		{name: "single", in: registeredClaims{Aud: audience{"a"}}, want: `{"aud":"a"}`},
+		{name: "multiple", in: registeredClaims{Aud: audience{"a", "b"}}, want: `{"aud":["a","b"]}`},
+		{name: "nil", in: registeredClaims{}, want: `{}`},
+		{name: "empty", in: registeredClaims{Aud: audience{}}, want: `{}`},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			b, err := json.Marshal(tt.in)
+			require.NoError(t, err)
+			assert.JSONEq(t, tt.want, string(b))
+		})
+	}
+}
+
 func TestAudienceUnmarshalJSON(t *testing.T) {
 	tests := []struct {
 		name string
@@ -38,27 +59,6 @@ func TestAudienceUnmarshalJSON(t *testing.T) {
 
 			require.NoError(t, err)
 			assert.Equal(t, tt.want, c.Aud)
-		})
-	}
-}
-
-func TestAudienceMarshalJSON(t *testing.T) {
-	tests := []struct {
-		name string
-		in   registeredClaims
-		want string
-	}{
-		{name: "single", in: registeredClaims{Aud: audience{"a"}}, want: `{"aud":"a"}`},
-		{name: "multiple", in: registeredClaims{Aud: audience{"a", "b"}}, want: `{"aud":["a","b"]}`},
-		{name: "nil", in: registeredClaims{}, want: `{}`},
-		{name: "empty", in: registeredClaims{Aud: audience{}}, want: `{}`},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			b, err := json.Marshal(tt.in)
-			require.NoError(t, err)
-			assert.JSONEq(t, tt.want, string(b))
 		})
 	}
 }
