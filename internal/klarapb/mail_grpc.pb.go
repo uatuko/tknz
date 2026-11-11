@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v7.35.1
-// source: proto/klara/mx/v1/mail.proto
+// source: proto/klara/v1/mail.proto
 
 package klarapb
 
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Mail_Send_FullMethodName = "/klara.mx.v1.Mail/Send"
+	Mail_Send_FullMethodName = "/klara.v1.Mail/Send"
 )
 
 // MailClient is the client API for Mail service.
@@ -108,7 +108,7 @@ func _Mail_Send_Handler(srv interface{}, ctx context.Context, dec func(interface
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Mail_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "klara.mx.v1.Mail",
+	ServiceName: "klara.v1.Mail",
 	HandlerType: (*MailServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -117,5 +117,5 @@ var Mail_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/klara/mx/v1/mail.proto",
+	Metadata: "proto/klara/v1/mail.proto",
 }
