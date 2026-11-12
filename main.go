@@ -19,10 +19,12 @@ import (
 	"go.tknz.dev/internal/kms"
 	"go.tknz.dev/internal/mail"
 	"go.tknz.dev/internal/srv"
+	"go.tknz.dev/internal/srv/common"
 )
 
 var (
 	addr       = flag.String("addr", ":8080", "tcp address to listen on")
+	baseUrl    = flag.String("base-url", "", "base url of the deployment (e.g. https://app.tknz.dev), used to resolve relative urls (required)")
 	debug      = flag.Bool("debug", false, "enable debug logs")
 	kmsKey     = flag.String("kms-key", "", "pem encoded elliptic-curve private key to use with local kms (e.g. .tmp/key.pem), defaults to using google cloud kms when not set")
 	mailAddr   = flag.String("mail-addr", "", "mail grpc address")
@@ -43,6 +45,10 @@ func _init() error {
 			Out:        os.Stdout,
 			TimeFormat: "15:04:05.000000",
 		})
+	}
+
+	if err := common.SetBaseUrl(*baseUrl); err != nil {
+		return err
 	}
 
 	err := db.Init(ctx)

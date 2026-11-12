@@ -83,6 +83,7 @@ run: .tmp/key.pem
 	npm run build
 	go run -race . -debug \
 		-addr localhost:8080 \
+		-base-url http://localhost:8080 \
 		-kms-key .tmp/key.pem \
 		-mail-addr localhost:50151 \
 		$(filter-out $@,$(MAKECMDGOALS))
