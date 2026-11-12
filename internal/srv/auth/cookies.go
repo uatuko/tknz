@@ -15,7 +15,7 @@ func deleteNonceCookie(w http.ResponseWriter) {
 		MaxAge:   -1,
 		Path:     common.AuthPathPattern(),
 		SameSite: http.SameSiteStrictMode,
-		Secure:   !strings.HasPrefix("http://", common.AuthBaseUrl()),
+		Secure:   !strings.HasPrefix(common.AuthBaseUrl(), "http://"),
 	})
 }
 
@@ -28,6 +28,6 @@ func setNonceCookie(w http.ResponseWriter, nonce string) {
 		MaxAge:   int(otpTtl.Seconds()),
 		Path:     common.AuthPathPattern(),
 		SameSite: http.SameSiteStrictMode,
-		Secure:   !strings.HasPrefix("http://", common.AuthBaseUrl()),
+		Secure:   !strings.HasPrefix(common.AuthBaseUrl(), "http://"),
 	})
 }

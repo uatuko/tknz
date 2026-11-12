@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
+	"net/url"
 	"strings"
 	"time"
 
@@ -18,6 +18,7 @@ import (
 	"go.tknz.dev/internal/jose/jws"
 	"go.tknz.dev/internal/kms"
 	"go.tknz.dev/internal/srv/auth"
+	"go.tknz.dev/internal/srv/common"
 )
 
 // Ref: https://www.rfc-editor.org/rfc/rfc7519.html#section-4.1 (registered claims)
@@ -79,11 +80,10 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var aud string
-	if os.Getenv("OIDC_BASE_URL") != "" {
-		aud = os.Getenv("OIDC_BASE_URL") + TokenEndpoint
-	} else {
-		aud = fmt.Sprintf("http://%s%s", r.Host, r.RequestURI)
+	aud, err := url.JoinPath(common.OidcBaseUrl(), TokenEndpoint)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	claims := jwtClaims{
