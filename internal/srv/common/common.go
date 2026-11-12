@@ -15,6 +15,40 @@ const (
 
 var baseUrl string
 
+func AuthBaseUrl() string {
+	s, err := url.JoinPath(baseUrl, authPath)
+	if err != nil {
+		panic(err)
+	}
+
+	return s
+}
+
+func AuthPathPattern() string {
+	return authPath
+}
+
+func AuthPathPrefix() string {
+	return strings.TrimSuffix(authPath, "/")
+}
+
+func OidcBaseUrl() string {
+	s, err := url.JoinPath(baseUrl, oidcPath)
+	if err != nil {
+		panic(err)
+	}
+
+	return s
+}
+
+func OidcPathPattern() string {
+	return oidcPath
+}
+
+func OidcPathPrefix() string {
+	return strings.TrimSuffix(oidcPath, "/")
+}
+
 // SetBaseUrl sets the base url (e.g. https://app.tknz.dev) used to resolve relative urls.
 func SetBaseUrl(s string) error {
 	if s == "" {
@@ -36,38 +70,4 @@ func SetBaseUrl(s string) error {
 
 	baseUrl = s
 	return nil
-}
-
-func AuthBaseUrl() string {
-	s, err := url.JoinPath(baseUrl, authPath)
-	if err != nil {
-		panic(err)
-	}
-
-	return s
-}
-
-func OidcBaseUrl() string {
-	s, err := url.JoinPath(baseUrl, oidcPath)
-	if err != nil {
-		panic(err)
-	}
-
-	return s
-}
-
-func AuthPathPattern() string {
-	return authPath
-}
-
-func AuthPathPrefix() string {
-	return strings.TrimSuffix(authPath, "/")
-}
-
-func OidcPathPattern() string {
-	return oidcPath
-}
-
-func OidcPathPrefix() string {
-	return strings.TrimSuffix(oidcPath, "/")
 }
