@@ -23,12 +23,13 @@
 		}
 
 		busy = true;
-		const { challenge, credentialIds } = data;
+		const { challenge, credentialIds, rpId } = data;
 
 		/** @type {PublicKeyCredentialRequestOptions} */
 		const publicKey = {
 			allowCredentials: credentialIds.map((id) => ({ id, type: 'public-key' })),
 			challenge,
+			rpId,
 			timeout: 300000, // 5 minutes
 		};
 
