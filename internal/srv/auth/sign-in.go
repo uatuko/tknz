@@ -15,6 +15,7 @@ import (
 type passkeySignInData struct {
 	Challenge     []byte
 	CredentialIds [][]byte
+	RpId          string
 
 	_ struct{} `cbor:",toarray"`
 }
@@ -104,6 +105,13 @@ func signInHandler(w http.ResponseWriter, r *http.Request) {
 func writePasskeySignInRedirect(ctx context.Context, w http.ResponseWriter, state *db.AuthState, providerId string, login string) {
 	log := zerolog.Ctx(ctx).With().Str(stateKey, state.Id()).Logger()
 
+	app, err := db.RetrieveApp(ctx, state.AppId())
+	if err != nil {
+		log.Error().Err(err).Msg("failed to retrieve app")
+		writeError(ctx, w, ErrTemporarilyUnavailable)
+		return
+	}
+
 	challenge := make([]byte, webauthnChallengeSize)
 	rand.Read(challenge)
 
@@ -139,6 +147,7 @@ func writePasskeySignInRedirect(ctx context.Context, w http.ResponseWriter, stat
 	data, err := cborEncoder().Marshal(passkeySignInData{
 		Challenge:     challenge,
 		CredentialIds: credIds,
+		RpId:          app.RpId(),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to marshal public key sign-in data")

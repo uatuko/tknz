@@ -12,12 +12,13 @@ export function load({ url }) {
 		error(http_status_bad_request, 'invalid or malformed request');
 	}
 
-	/** @type {[Uint8Array<ArrayBuffer>, Array<Uint8Array<ArrayBuffer>>]} */
-	const [challenge, credentialIds] = cborDecode(decode(data));
+	/** @type {[Uint8Array<ArrayBuffer>, Array<Uint8Array<ArrayBuffer>>, string]} */
+	const [challenge, credentialIds, rpId] = cborDecode(decode(data));
 
 	return {
 		challenge,
 		credentialIds,
 		state,
+		rpId,
 	};
 }
