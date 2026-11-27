@@ -18,7 +18,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^26.6.5",
     "cbor2": "^2.3.0",
-    "svelte": "^5.51.0",
+    "svelte": "^5.56.8",
     "svelte-check": "^4.4.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
